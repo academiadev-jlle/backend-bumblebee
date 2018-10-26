@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class especie {
+public class Especie {
 
     @Id
     @GeneratedValue
@@ -21,7 +21,7 @@ public class especie {
     @NotNull
     private Boolean excluido = false;
 
-    public especie(){
+    public Especie(){
 
     }
 
