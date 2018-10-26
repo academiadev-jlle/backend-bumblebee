@@ -12,7 +12,7 @@ public class Cidade {
 
     @Id
     @GeneratedValue
-    private Long idUf;
+    private Long idCidade;
 
     @NotNull
     @Size(min = 1, max = 45)
@@ -29,12 +29,12 @@ public class Cidade {
 
     }
 
-    public Long getIdUf() {
-        return idUf;
+    public Long getIdCidade() {
+        return idCidade;
     }
 
-    public void setIdUf(Long idUf) {
-        this.idUf = idUf;
+    public void setIdCidade(Long idCidade) {
+        this.idCidade = idCidade;
     }
 
     public String getNome() {
