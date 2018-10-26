@@ -3,8 +3,10 @@ package br.com.academiadev.bumblebee.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 public class Foto {
@@ -21,7 +23,10 @@ public class Foto {
     @NotNull
     private Boolean excluido = false;
 
-    public Foto(){
+    @ManyToMany(targetEntity = Pet.class)
+    private Set petSet;
+
+    public Foto() {
 
     }
 
@@ -49,5 +54,12 @@ public class Foto {
         this.excluido = excluido;
     }
 
+    public Set getPetSet() {
+        return petSet;
+    }
+
+    public void setPetSet(Set petSet) {
+        this.petSet = petSet;
+    }
 
 }

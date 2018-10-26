@@ -7,7 +7,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.persistence.OneToOne;
 import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Pet {
@@ -48,6 +50,9 @@ public class Pet {
 
     @OneToOne
     private Especie especie;
+
+    @ManyToMany(targetEntity = Foto.class)
+    private Set fotoSet;
 
     public Pet(){
 
@@ -139,6 +144,14 @@ public class Pet {
 
     public void setEspecie(Especie especie) {
         this.especie = especie;
+    }
+
+    public Set getFotoSet() {
+        return fotoSet;
+    }
+
+    public void setFotoSet(Set fotoSet) {
+        this.fotoSet = fotoSet;
     }
 
 
