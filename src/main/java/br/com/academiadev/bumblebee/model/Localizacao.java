@@ -31,4 +31,56 @@ public class Localizacao {
     @ManyToOne
     private Cidade cidade;
 
+    public Localizacao(){
+
+    }
+
+    public Long getIdLocalizacao() {
+        return idLocalizacao;
+    }
+
+    public void setIdLocalizacao(Long idLocalizacao) {
+        this.idLocalizacao = idLocalizacao;
+    }
+
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
+    }
+
+    public Boolean getExcluido() {
+        return excluido;
+    }
+
+    public void setExcluido(Boolean excluido) {
+        this.excluido = excluido;
+    }
+
+    public Cidade getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
+    }
+
 }
