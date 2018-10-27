@@ -31,7 +31,7 @@ public class Pet {
     private String sexo;
 
     @NotNull
-    private Date data_postagem;
+    private Date dataPostagem;
 
     @NotNull
     private Boolean excluido = false;
@@ -90,12 +90,12 @@ public class Pet {
         this.sexo = sexo;
     }
 
-    public Date getData_postagem() {
-        return data_postagem;
+    public Date getDataPostagem() {
+        return dataPostagem;
     }
 
-    public void setData_postagem(Date data_postagem) {
-        this.data_postagem = data_postagem;
+    public void setDataPostagem(Date dataPostagem) {
+        this.dataPostagem = dataPostagem;
     }
 
     public Boolean getExcluido() {

@@ -18,7 +18,7 @@ public class Foto {
     // TODO: verificar como salvar as imagens
     @NotNull
     @Size(min = 1, max = 45)
-    private String nome_arquivo;
+    private String nomeArquivo;
 
     @NotNull
     private Boolean excluido = false;
@@ -38,12 +38,12 @@ public class Foto {
         this.idFoto = idFoto;
     }
 
-    public String getNome_arquivo() {
-        return nome_arquivo;
+    public String getNomeArquivo() {
+        return nomeArquivo;
     }
 
-    public void setNome_arquivo(String nome_arquivo) {
-        this.nome_arquivo = nome_arquivo;
+    public void setNomeArquivo(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo;
     }
 
     public Boolean getExcluido() {
