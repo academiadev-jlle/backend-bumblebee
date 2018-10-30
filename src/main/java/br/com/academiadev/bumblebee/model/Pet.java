@@ -1,13 +1,12 @@
 package br.com.academiadev.bumblebee.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import br.com.academiadev.bumblebee.enums.Categoria;
+import br.com.academiadev.bumblebee.enums.Especie;
+import br.com.academiadev.bumblebee.enums.Porte;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.persistence.OneToOne;
-import javax.persistence.ManyToOne;
-import javax.persistence.ManyToMany;
 import java.util.Date;
 import java.util.Set;
 
@@ -42,13 +41,13 @@ public class Pet {
     @OneToOne
     private Localizacao localizacao;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
     private Porte porte;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
     private Especie especie;
 
     @ManyToMany(targetEntity = Foto.class)
