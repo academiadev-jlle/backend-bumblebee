@@ -1,4 +1,5 @@
 package br.com.academiadev.bumblebee.endpoint;
+
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.repository.PetRepository;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/pet")
@@ -32,8 +34,8 @@ public class PetEndpoint {
             @ApiResponse(code = 201, message = "Pet encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public List<Pet> buscarPor(@PathVariable Long id) {
-        return repository.findAll();
+    public Pet buscarPor(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @ApiOperation(value = "Cria um Pet")
