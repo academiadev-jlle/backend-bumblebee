@@ -21,7 +21,7 @@ public class LocalizacaoEndpoint {
 
     @ApiOperation(value = "Retorna uma lista de localizações")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Localizações retornados com sucesso")
+            @ApiResponse(code = 201, message = "Localizações retornadas com sucesso")
     })
     @GetMapping
     public List<Localizacao> buscarTodos() {
@@ -30,7 +30,7 @@ public class LocalizacaoEndpoint {
 
     @ApiOperation(value = "Retorna uma localização")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Localizações encontrado com sucesso")
+            @ApiResponse(code = 201, message = "Localização encontrada com sucesso")
     })
     @GetMapping("/{id}")
     public List<Localizacao> buscarPor(@PathVariable Long id) {
