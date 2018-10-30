@@ -24,8 +24,8 @@ public class UsuarioEndpoint {
             @ApiResponse(code = 201, message = "Usuario encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public List<Usuario> buscarPor(@PathVariable Long id) {
-        return repository.findAll();
+    public Usuario buscarPor(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @ApiOperation(value = "Cria um Usuário")
