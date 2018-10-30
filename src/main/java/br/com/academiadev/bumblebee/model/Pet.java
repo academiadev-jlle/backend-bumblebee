@@ -1,5 +1,9 @@
 package br.com.academiadev.bumblebee.model;
 
+import br.com.academiadev.bumblebee.enums.Categoria;
+import br.com.academiadev.bumblebee.enums.Especie;
+import br.com.academiadev.bumblebee.enums.Porte;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
