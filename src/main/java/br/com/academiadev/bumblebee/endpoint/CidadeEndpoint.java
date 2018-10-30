@@ -33,8 +33,8 @@ public class CidadeEndpoint {
             @ApiResponse(code = 201, message = "Cidade encontrada com sucesso")
     })
     @GetMapping("/{id}")
-    public List<Cidade> buscarPor(@PathVariable Long id) {
-        return repository.findAll();
+    public Cidade buscarPor(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @ApiOperation(value = "Cria uma cidade")

@@ -33,8 +33,8 @@ public class LocalizacaoEndpoint {
             @ApiResponse(code = 201, message = "Localização encontrada com sucesso")
     })
     @GetMapping("/{id}")
-    public List<Localizacao> buscarPor(@PathVariable Long id) {
-        return repository.findAll();
+    public Localizacao buscarPor(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @ApiOperation(value = "Cria uma localização")

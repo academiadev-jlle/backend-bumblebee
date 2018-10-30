@@ -33,8 +33,8 @@ public class UfEndpoint {
             @ApiResponse(code = 201, message = "Estado encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public List<Uf> buscarPor(@PathVariable Long id) {
-        return repository.findAll();
+    public Uf buscarPor(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @ApiOperation(value = "Cria um estado")
