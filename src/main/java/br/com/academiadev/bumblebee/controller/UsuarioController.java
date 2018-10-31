@@ -1,4 +1,4 @@
-package br.com.academiadev.bumblebee.endpoint;
+package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.model.Usuario;
 import br.com.academiadev.bumblebee.repository.UsuarioRepository;
@@ -9,12 +9,10 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/usuario")
 @Api(description = "Usuarios")
-public class UsuarioEndpoint {
+public class UsuarioController {
 
     @Autowired
     private UsuarioRepository repository;
