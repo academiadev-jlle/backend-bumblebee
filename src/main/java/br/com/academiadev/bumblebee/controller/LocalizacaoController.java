@@ -1,4 +1,4 @@
-package br.com.academiadev.bumblebee.endpoint;
+package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.repository.LocalizacaoRepository;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/localizacao")
 @Api(description = "Localizações")
-public class LocalizacaoEndpoint {
+public class LocalizacaoController {
 
     @Autowired
     private LocalizacaoRepository repository;
