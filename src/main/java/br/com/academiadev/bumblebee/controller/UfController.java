@@ -1,4 +1,4 @@
-package br.com.academiadev.bumblebee.endpoint;
+package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.model.Uf;
 import br.com.academiadev.bumblebee.repository.UfRepository;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/uf")
 @Api(description = "Uf's")
-public class UfEndpoint {
+public class UfController {
 
     @Autowired
     private UfRepository repository;

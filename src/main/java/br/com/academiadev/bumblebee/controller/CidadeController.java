@@ -1,4 +1,4 @@
-package br.com.academiadev.bumblebee.endpoint;
+package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.repository.CidadeRepository;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cidade")
 @Api(description = "Cidades")
-public class CidadeEndpoint {
+public class CidadeController {
 
     @Autowired
     private CidadeRepository repository;
