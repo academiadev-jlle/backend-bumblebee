@@ -1,5 +1,6 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.model.Uf;
 import br.com.academiadev.bumblebee.repository.UfRepository;
 import io.swagger.annotations.Api;
@@ -33,8 +34,9 @@ public class UfController {
             @ApiResponse(code = 201, message = "Estado encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public Uf buscarPor(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+    public Uf buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Estado com id " + id + " não encontrado"));
     }
 
     @ApiOperation(value = "Cria um estado")

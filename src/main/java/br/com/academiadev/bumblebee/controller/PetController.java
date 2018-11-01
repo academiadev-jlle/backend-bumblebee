@@ -1,5 +1,6 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.repository.PetRepository;
 import io.swagger.annotations.ApiOperation;
@@ -33,8 +34,9 @@ public class PetController {
             @ApiResponse(code = 201, message = "Pet encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public Pet buscarPor(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+    public Pet buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Pet com id " + id + " não encontrado"));
     }
 
     @ApiOperation(value = "Cria um Pet")
