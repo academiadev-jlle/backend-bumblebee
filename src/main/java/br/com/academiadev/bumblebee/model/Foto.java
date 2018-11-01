@@ -4,28 +4,25 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Set;
 
 @Entity
-@Where(clause="excluido=false")
+@Where(clause = "excluido=false")
 public class Foto {
 
     @Id
     @GeneratedValue
     private Long idFoto;
 
-    // TODO: verificar como salvar as imagens
+    @Lob
     @NotNull
-    @Size(min = 1, max = 45)
-    private String nomeArquivo;
+    private byte[] arquivo;
 
     @NotNull
-    @Column(name="excluido")
+    @Column(name = "excluido")
     private Boolean excluido = false;
 
-    @ManyToMany(targetEntity = Pet.class)
-    private Set petSet;
+    @ManyToOne
+    private Pet pet;
 
     public Foto() {
 
@@ -39,12 +36,12 @@ public class Foto {
         this.idFoto = idFoto;
     }
 
-    public String getNomeArquivo() {
-        return nomeArquivo;
+    public byte[] getArquivo() {
+        return arquivo;
     }
 
-    public void setNomeArquivo(String nomeArquivo) {
-        this.nomeArquivo = nomeArquivo;
+    public void setArquivo(byte[] arquivo) {
+        this.arquivo = arquivo;
     }
 
     public Boolean getExcluido() {
@@ -55,12 +52,5 @@ public class Foto {
         this.excluido = excluido;
     }
 
-    public Set getPetSet() {
-        return petSet;
-    }
-
-    public void setPetSet(Set petSet) {
-        this.petSet = petSet;
-    }
 
 }
