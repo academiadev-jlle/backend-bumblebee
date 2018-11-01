@@ -29,6 +29,7 @@ public class UfController {
         return repository.findAll();
     }
 
+
     @ApiOperation(value = "Retorna um estado")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Estado encontrado com sucesso")
@@ -38,6 +39,7 @@ public class UfController {
         return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Estado com id " + id + " não encontrado"));
     }
+
 
     @ApiOperation(value = "Cria um estado")
     @ApiResponses(value = {
@@ -49,16 +51,18 @@ public class UfController {
         return repository.save(uf);
     }
 
+
     @ApiOperation(value = "Deleta um estado")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Estado deletado com sucesso")
     })
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+    public Uf deletar(@PathVariable Long id) throws ObjectNotFoundException {
         Uf uf = repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Estado com id " + id + " não encontrado"));
         uf.setExcluido(Boolean.TRUE);
         repository.save(uf);
+        return uf;
     }
 
 }
