@@ -1,14 +1,14 @@
 package br.com.academiadev.bumblebee.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
+@Where(clause="excluido=false")
 public class Foto {
 
     @Id
@@ -21,6 +21,7 @@ public class Foto {
     private String nomeArquivo;
 
     @NotNull
+    @Column(name="excluido")
     private Boolean excluido = false;
 
     @ManyToMany(targetEntity = Pet.class)
