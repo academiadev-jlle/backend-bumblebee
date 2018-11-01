@@ -1,7 +1,8 @@
-package br.com.academiadev.bumblebee.endpoint;
+package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.repository.CidadeRepository;
+import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cidade")
 @Api(description = "Cidades")
-public class CidadeEndpoint {
+public class CidadeController {
 
     @Autowired
     private CidadeRepository repository;
@@ -33,8 +34,9 @@ public class CidadeEndpoint {
             @ApiResponse(code = 201, message = "Cidade encontrada com sucesso")
     })
     @GetMapping("/{id}")
-    public Cidade buscarPor(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+    public Cidade buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Cidade com id " + id + "não encontrada"));
     }
 
     @ApiOperation(value = "Cria uma cidade")
@@ -52,8 +54,11 @@ public class CidadeEndpoint {
             @ApiResponse(code = 201, message = "Cidade deletada com sucesso")
     })
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Cidade cidade = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Cidade com id " + id + "não encontrada"));
+        cidade.setExcluido(Boolean.TRUE);
+        repository.save(cidade);
     }
 
 }

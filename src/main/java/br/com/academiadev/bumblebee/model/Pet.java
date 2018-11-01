@@ -3,6 +3,7 @@ package br.com.academiadev.bumblebee.model;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
+@Where(clause="excluido=false")
 public class Pet {
 
     @Id
@@ -33,6 +35,7 @@ public class Pet {
     private Date dataPostagem;
 
     @NotNull
+    @Column(name="excluido")
     private Boolean excluido = false;
 
     @ManyToOne

@@ -1,5 +1,6 @@
-package br.com.academiadev.bumblebee.endpoint;
+package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.model.Uf;
 import br.com.academiadev.bumblebee.repository.UfRepository;
 import io.swagger.annotations.Api;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/uf")
 @Api(description = "Uf's")
-public class UfEndpoint {
+public class UfController {
 
     @Autowired
     private UfRepository repository;
@@ -33,8 +34,9 @@ public class UfEndpoint {
             @ApiResponse(code = 201, message = "Estado encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public Uf buscarPor(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+    public Uf buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Estado com id " + id + " não encontrado"));
     }
 
     @ApiOperation(value = "Cria um estado")
@@ -52,8 +54,11 @@ public class UfEndpoint {
             @ApiResponse(code = 201, message = "Estado deletado com sucesso")
     })
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Uf uf = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Estado com id " + id + " não encontrado"));
+        uf.setExcluido(Boolean.TRUE);
+        repository.save(uf);
     }
 
 }

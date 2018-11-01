@@ -1,13 +1,13 @@
 package br.com.academiadev.bumblebee.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.persistence.ManyToOne;
 
 @Entity
+@Where(clause="excluido=false")
 public class Cidade {
 
     @Id
@@ -19,6 +19,7 @@ public class Cidade {
     private String nome;
 
     @NotNull
+    @Column(name="excluido")
     private Boolean excluido = false;
 
     @ManyToOne

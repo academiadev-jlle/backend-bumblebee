@@ -1,5 +1,8 @@
 package br.com.academiadev.bumblebee.model;
 
+import org.hibernate.annotations.Where;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -7,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
+@Where(clause="excluido=false")
 public class Uf {
 
     @Id
@@ -22,6 +26,7 @@ public class Uf {
     private String uf;
 
     @NotNull
+    @Column(name="excluido")
     private Boolean excluido = false;
 
     public Uf(){
