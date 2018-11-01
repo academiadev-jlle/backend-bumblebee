@@ -54,8 +54,11 @@ public class CidadeController {
             @ApiResponse(code = 201, message = "Cidade deletada com sucesso")
     })
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Cidade cidade = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Cidade com id " + id + "não encontrada"));
+        cidade.setExcluido(Boolean.TRUE);
+        repository.save(cidade);
     }
 
 }

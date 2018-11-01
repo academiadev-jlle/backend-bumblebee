@@ -54,8 +54,11 @@ public class LocalizacaoController {
             @ApiResponse(code = 201, message = "Localização deletada com sucesso")
     })
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Localizacao localizacao = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Localização com id " + id + " não encontrada"));
+        localizacao.setExcluido(Boolean.TRUE);
+        repository.save(localizacao);
     }
 
 }

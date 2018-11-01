@@ -42,8 +42,11 @@ public class UsuarioController {
             @ApiResponse(code = 201, message = "Usuario deletado com sucesso")
     })
     @DeleteMapping("/{id]")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
+        usuario.setExcluido(Boolean.TRUE);
+        repository.save(usuario);
     }
 
 }

@@ -54,8 +54,11 @@ public class PetController {
             @ApiResponse(code = 201, message = "Pet deletado com sucesso")
     })
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Pet pet = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Pet com id " + id + " não encontrado"));
+        pet.setExcluido(Boolean.TRUE);
+        repository.save(pet);
     }
 
 }
