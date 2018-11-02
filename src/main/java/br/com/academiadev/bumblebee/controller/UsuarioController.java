@@ -32,6 +32,7 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuário criado com sucesso")
     })
+
     @PostMapping
     public Usuario criar(@RequestBody Usuario usuario) {
         return repository.save(usuario);

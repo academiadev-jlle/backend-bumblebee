@@ -1,6 +1,5 @@
 package br.com.academiadev.bumblebee.controller;
 
-
 import br.com.academiadev.bumblebee.model.Uf;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-
-import java.util.Collections;
-import java.util.List;
-
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,28 +28,33 @@ public class UfControllerTest {
     @Autowired
     private UfController ufController;
 
-
     @Test
     public void postUf() throws Exception {
-        Uf uf = new Uf();
-        uf.setNome("Santa Catarina Teste");
-        uf.setUf("SC");
-        uf.setExcluido(Boolean.FALSE);
-        ufController.criar(uf);
+        Uf uf = criaUf();
         mvc.perform(get("/uf")).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
-    public void getPorIdUf() throws Exception {
-        mvc.perform(get("/uf/1")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome", is("Santa Catarina Teste")));
+    public void getUfPorId() throws Exception {
+        Uf uf = criaUf();
+        mvc.perform(get("/uf/"+uf.getIdUf())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.nome", is(uf.getNome())));
     }
 
-    // TODO: Corrigir o teste de remoção.
     @Test
-    public void deleteUf() throws Exception {
-        mvc.perform(delete("/uf/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andExpect(jsonPath("$.excluido", is(Boolean.TRUE)));
+    public void deleteUfPorId() throws Exception {
+        Uf uf = criaUf();
+        mvc.perform(delete("/uf/"+uf.getIdUf()).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andExpect(jsonPath("$.excluido", is(Boolean.TRUE)));
+    }
+
+    private Uf criaUf(){
+        Uf uf = new Uf();
+        uf.setNome("Santa Catarina");
+        uf.setUf("SC");
+        uf.setExcluido(Boolean.FALSE);
+        ufController.criar(uf);
+        return uf;
     }
 
 
