@@ -1,5 +1,6 @@
 package br.com.academiadev.bumblebee.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -22,7 +23,9 @@ public class Cidade {
     @Column(name="excluido")
     private Boolean excluido = false;
 
-    @ManyToOne
+    @NotNull
+    @ApiModelProperty(name = "Uf")
+    @ManyToOne(optional = false)
     private Uf uf;
 
 
