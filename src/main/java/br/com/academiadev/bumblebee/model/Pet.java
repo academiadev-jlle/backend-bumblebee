@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Where(clause="excluido=false")
@@ -53,8 +52,6 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private Especie especie;
 
-    @ManyToMany(targetEntity = Foto.class)
-    private Set fotoSet;
 
     public Pet(){
 
@@ -147,14 +144,5 @@ public class Pet {
     public void setEspecie(Especie especie) {
         this.especie = especie;
     }
-
-    public Set getFotoSet() {
-        return fotoSet;
-    }
-
-    public void setFotoSet(Set fotoSet) {
-        this.fotoSet = fotoSet;
-    }
-
 
 }
