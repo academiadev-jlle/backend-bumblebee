@@ -1,5 +1,6 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.repository.LocalizacaoRepository;
 import io.swagger.annotations.Api;
@@ -33,8 +34,9 @@ public class LocalizacaoController {
             @ApiResponse(code = 201, message = "Localização encontrada com sucesso")
     })
     @GetMapping("/{id}")
-    public Localizacao buscarPor(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+    public Localizacao buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Localização com id " + id + " não encontrada"));
     }
 
     @ApiOperation(value = "Cria uma localização")
@@ -52,8 +54,11 @@ public class LocalizacaoController {
             @ApiResponse(code = 201, message = "Localização deletada com sucesso")
     })
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Localizacao localizacao = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Localização com id " + id + " não encontrada"));
+        localizacao.setExcluido(Boolean.TRUE);
+        repository.save(localizacao);
     }
 
 }

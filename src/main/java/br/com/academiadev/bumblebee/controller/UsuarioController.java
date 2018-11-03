@@ -1,5 +1,6 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.model.Usuario;
 import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 import io.swagger.annotations.Api;
@@ -22,8 +23,9 @@ public class UsuarioController {
             @ApiResponse(code = 201, message = "Usuario encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public Usuario buscarPor(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+    public Usuario buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
     }
 
     @ApiOperation(value = "Cria um Usuário")
@@ -40,8 +42,11 @@ public class UsuarioController {
             @ApiResponse(code = 201, message = "Usuario deletado com sucesso")
     })
     @DeleteMapping("/{id]")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
+        usuario.setExcluido(Boolean.TRUE);
+        repository.save(usuario);
     }
 
 }

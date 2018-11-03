@@ -3,14 +3,15 @@ package br.com.academiadev.bumblebee.model;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
+@Where(clause="excluido=false")
 public class Pet {
 
     @Id
@@ -33,6 +34,7 @@ public class Pet {
     private Date dataPostagem;
 
     @NotNull
+    @Column(name="excluido")
     private Boolean excluido = false;
 
     @ManyToOne
@@ -50,8 +52,6 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private Especie especie;
 
-    @ManyToMany(targetEntity = Foto.class)
-    private Set fotoSet;
 
     public Pet(){
 
@@ -144,14 +144,5 @@ public class Pet {
     public void setEspecie(Especie especie) {
         this.especie = especie;
     }
-
-    public Set getFotoSet() {
-        return fotoSet;
-    }
-
-    public void setFotoSet(Set fotoSet) {
-        this.fotoSet = fotoSet;
-    }
-
 
 }
