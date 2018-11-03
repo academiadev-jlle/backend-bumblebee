@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/foto")
 @Api(description = "Fotos")
@@ -37,16 +38,6 @@ public class FotoController {
     public Foto buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
         return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Foto com id " + id + " não encontrado"));
-    }
-
-    @ApiOperation(value = "Retorna uma lista de fotos do pet")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Fotos retornadas com sucesso")
-    })
-    @GetMapping("/pet/{idPet}")
-    public List<Foto> buscarPorPet(@PathVariable Long idPet) throws ObjectNotFoundException {
-        return repository.findAllByPetIdPet(idPet);
-//                .orElseThrow(() -> new ObjectNotFoundException("Foto com id do pet " + idPet + " não encontrado"));
     }
 
     @ApiOperation(value = "Cria uma Foto")

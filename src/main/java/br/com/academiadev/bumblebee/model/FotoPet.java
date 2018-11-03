@@ -7,37 +7,46 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Where(clause = "excluido=false")
-public class Foto {
+public class FotoPet {
 
     @Id
     @GeneratedValue
-    private Long idFoto;
+    private Long idFotoPet;
 
     @NotNull
-    private String arquivo;
+    @ManyToOne
+    private Pet pet;
+
+    @NotNull
+    @OneToOne
+    private Foto foto;
 
     @NotNull
     @Column(name = "excluido")
     private Boolean excluido = false;
 
-    public Foto() {
-
+    public Long getIdFotoPet() {
+        return idFotoPet;
     }
 
-    public Long getIdFoto() {
-        return idFoto;
+    public void setIdFotoPet(Long idFotoPet) {
+        this.idFotoPet = idFotoPet;
     }
 
-    public void setIdFoto(Long idFoto) {
-        this.idFoto = idFoto;
+    public Pet getPet() {
+        return pet;
     }
 
-    public String getArquivo() {
-        return arquivo;
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
-    public void setArquivo(String arquivo) {
-        this.arquivo = arquivo;
+    public Foto getFoto() {
+        return foto;
+    }
+
+    public void setFoto(Foto foto) {
+        this.foto = foto;
     }
 
     public Boolean getExcluido() {
@@ -47,6 +56,5 @@ public class Foto {
     public void setExcluido(Boolean excluido) {
         this.excluido = excluido;
     }
-
 
 }
