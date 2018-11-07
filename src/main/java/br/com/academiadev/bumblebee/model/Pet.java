@@ -3,31 +3,43 @@ package br.com.academiadev.bumblebee.model;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper=true)
+@EntityListeners(AuditingEntityListener.class)
+@ApiModel(description = "Pet")
 @Entity
 @Where(clause="excluido=false")
-public class Pet {
-
-    @Id
-    @GeneratedValue
-    private Long idPet;
+public class Pet extends EntidadeAuditavel<Long>{
 
     @NotNull
     @Size(min = 1, max = 45)
+    @ApiModelProperty(example = "Toto", name = "Nome")
     private String nome;
 
     @NotNull
     @Size(min = 1, max = 45)
+    @ApiModelProperty(example = "Peludo e muito brincalhão", name = "Descricao")
     private String descricao;
 
     @NotNull
     @Size(min = 1, max = 1)
+    @ApiModelProperty(example = "Macho", name = "Sexo")
     private String sexo;
 
     @NotNull
@@ -51,98 +63,5 @@ public class Pet {
 
     @Enumerated(EnumType.STRING)
     private Especie especie;
-
-
-    public Pet(){
-
-    }
-
-    public Long getIdPet() {
-        return idPet;
-    }
-
-    public void setIdPet(Long idPet) {
-        this.idPet = idPet;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-
-    public Date getDataPostagem() {
-        return dataPostagem;
-    }
-
-    public void setDataPostagem(Date dataPostagem) {
-        this.dataPostagem = dataPostagem;
-    }
-
-    public Boolean getExcluido() {
-        return excluido;
-    }
-
-    public void setExcluido(Boolean excluido) {
-        this.excluido = excluido;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Localizacao getLocalizacao() {
-        return localizacao;
-    }
-
-    public void setLocalizacao(Localizacao localizacao) {
-        this.localizacao = localizacao;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public Porte getPorte() {
-        return porte;
-    }
-
-    public void setPorte(Porte porte) {
-        this.porte = porte;
-    }
-
-    public Especie getEspecie() {
-        return especie;
-    }
-
-    public void setEspecie(Especie especie) {
-        this.especie = especie;
-    }
 
 }

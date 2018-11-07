@@ -1,28 +1,38 @@
 package br.com.academiadev.bumblebee.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EntityListeners(AuditingEntityListener.class)
+@ApiModel(description = "Localizacao")
 @Entity
 @Where(clause="excluido=false")
-public class Localizacao {
-
-    @Id
-    @GeneratedValue
-    private Long idLocalizacao;
+public class Localizacao extends EntidadeAuditavel<Long>{
 
     @NotNull
     @Size(min = 1, max = 45)
+    @ApiModelProperty(example = "Capinzal", name = "Logradouro")
     private String logradouro;
 
     @NotNull
     @Size(min = 1, max = 45)
+    @ApiModelProperty(example = "Ubatuba", name = "Bairro")
     private String bairro;
 
     @Size(max = 45)
+    @ApiModelProperty(example = "Casa", name = "Referencia")
     private String referencia;
 
     @NotNull
@@ -31,57 +41,5 @@ public class Localizacao {
 
     @ManyToOne
     private Cidade cidade;
-
-    public Localizacao(){
-
-    }
-
-    public Long getIdLocalizacao() {
-        return idLocalizacao;
-    }
-
-    public void setIdLocalizacao(Long idLocalizacao) {
-        this.idLocalizacao = idLocalizacao;
-    }
-
-    public String getLogradouro() {
-        return logradouro;
-    }
-
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getReferencia() {
-        return referencia;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
-    public Boolean getExcluido() {
-        return excluido;
-    }
-
-    public void setExcluido(Boolean excluido) {
-        this.excluido = excluido;
-    }
-
-    public Cidade getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(Cidade cidade) {
-        this.cidade = cidade;
-    }
 
 }

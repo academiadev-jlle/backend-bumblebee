@@ -1,17 +1,23 @@
 package br.com.academiadev.bumblebee.model;
 
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EntityListeners(AuditingEntityListener.class)
+@ApiModel(description = "Usuário")
 @Entity
 @Where(clause = "excluido=false")
-public class FotoPet {
-
-    @Id
-    @GeneratedValue
-    private Long idFotoPet;
+public class FotoPet extends EntidadeAuditavel<Long>{
 
     @NotNull
     @ManyToOne
@@ -24,37 +30,5 @@ public class FotoPet {
     @NotNull
     @Column(name = "excluido")
     private Boolean excluido = false;
-
-    public Long getIdFotoPet() {
-        return idFotoPet;
-    }
-
-    public void setIdFotoPet(Long idFotoPet) {
-        this.idFotoPet = idFotoPet;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Foto getFoto() {
-        return foto;
-    }
-
-    public void setFoto(Foto foto) {
-        this.foto = foto;
-    }
-
-    public Boolean getExcluido() {
-        return excluido;
-    }
-
-    public void setExcluido(Boolean excluido) {
-        this.excluido = excluido;
-    }
 
 }
