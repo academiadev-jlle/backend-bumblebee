@@ -39,7 +39,7 @@ public class UfControllerTest {
     public void getUfPorId() throws Exception {
         Uf uf = criaUf();
         mvc.perform(get("/uf/"+uf.getIdUf())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome", is(uf.getNome())));
+                .andExpect(jsonPath("$.idUf", is(new Long(uf.getIdUf()))));
     }
 
     @Test
