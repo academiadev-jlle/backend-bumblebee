@@ -24,8 +24,4 @@ public class Foto extends EntidadeAuditavel<Long>{
     @ApiModelProperty(example = "foto/pet.jpg", name = "Arquivo")
     private String arquivo;
 
-    @NotNull
-    @Column(name = "excluido")
-    private Boolean excluido = false;
-
 }

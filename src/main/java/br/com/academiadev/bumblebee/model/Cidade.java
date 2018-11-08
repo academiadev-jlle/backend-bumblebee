@@ -29,10 +29,6 @@ public class Cidade extends EntidadeAuditavel<Long>{
     private String nome;
 
     @NotNull
-    @Column(name="excluido")
-    private Boolean excluido = false;
-
-    @NotNull
     @ApiModelProperty(name = "Uf")
     @ManyToOne(optional = false)
     private Uf uf;

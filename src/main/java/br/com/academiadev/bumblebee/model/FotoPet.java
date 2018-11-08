@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Data
 @EntityListeners(AuditingEntityListener.class)
-@ApiModel(description = "Usuário")
+@ApiModel(description = "FotoPet")
 @Entity
 @Where(clause = "excluido=false")
 public class FotoPet extends EntidadeAuditavel<Long>{
@@ -26,9 +26,5 @@ public class FotoPet extends EntidadeAuditavel<Long>{
     @NotNull
     @OneToOne
     private Foto foto;
-
-    @NotNull
-    @Column(name = "excluido")
-    private Boolean excluido = false;
 
 }

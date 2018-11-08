@@ -35,10 +35,6 @@ public class Localizacao extends EntidadeAuditavel<Long>{
     @ApiModelProperty(example = "Casa", name = "Referencia")
     private String referencia;
 
-    @NotNull
-    @Column(name="excluido")
-    private Boolean excluido = false;
-
     @ManyToOne
     private Cidade cidade;
 

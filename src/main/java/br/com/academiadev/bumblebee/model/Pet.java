@@ -45,10 +45,6 @@ public class Pet extends EntidadeAuditavel<Long>{
     @NotNull
     private Date dataPostagem;
 
-    @NotNull
-    @Column(name="excluido")
-    private Boolean excluido = false;
-
     @ManyToOne
     private Usuario usuario;
 

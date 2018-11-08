@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Data
 @EntityListeners(AuditingEntityListener.class)
-@ApiModel(description = "Usuário")
+@ApiModel(description = "Uf")
 @Entity
 @Where(clause="excluido=false")
 public class Uf extends EntidadeAuditavel<Long>{
@@ -32,8 +32,5 @@ public class Uf extends EntidadeAuditavel<Long>{
     @ApiModelProperty(example = "SC", name = "Uf")
     private String uf;
 
-    @NotNull
-    @Column(name="excluido")
-    private Boolean excluido = false;
 
 }
