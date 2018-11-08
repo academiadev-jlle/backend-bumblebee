@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -24,6 +25,10 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @ApiModel(description = "Pet")
 @Entity
+@SQLDelete(sql =
+        "UPDATE Pet " +
+                "SET excluido = true " +
+                "WHERE id = ?")
 @Where(clause="excluido=false")
 public class Pet extends EntidadeAuditavel<Long>{
 

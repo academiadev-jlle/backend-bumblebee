@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 //import org.springframework.security.core.GrantedAuthority;
@@ -21,9 +22,13 @@ import javax.validation.constraints.Size;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @EntityListeners(AuditingEntityListener.class)
-@ApiModel(description = "Usuário")
+@ApiModel(description = "Usuario")
 @Entity
-//@Where(clause="excluido=false")
+@SQLDelete(sql =
+        "UPDATE Usuario " +
+                "SET excluido = true " +
+                "WHERE id = ?")
+@Where(clause="excluido=false")
 public class Usuario extends EntidadeAuditavel<Long>{
 
     @NotNull()

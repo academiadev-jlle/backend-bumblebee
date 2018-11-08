@@ -12,8 +12,4 @@ public class CidadeService extends ServiceAbstrataImpl<CidadeRepository, Cidade,
     public CidadeService(CidadeRepository repository) {
         super(repository);
     }
-
-    public Cidade softDelete(Long id){
-        return getRepository().softDelete(id);
-    }
 }
