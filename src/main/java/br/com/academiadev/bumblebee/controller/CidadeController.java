@@ -16,4 +16,9 @@ public class CidadeController extends CrudControllerAbstrato<CidadeService, Cida
         super(service);
     }
 
+    @Autowired
+    public void softDelete(Long id){
+        service.softDelete(id);
+    }
+
 }
