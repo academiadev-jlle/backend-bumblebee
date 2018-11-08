@@ -32,10 +32,7 @@ public class CrudControllerAbstrato<S extends ServiceAbstrata<T, ID>, T, ID> ext
 //    })
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
-    public List<T> buscarTodos(
-            @RequestParam(required = false) Optional<Long> id,
-            @RequestParam(required = false) Optional<String> nome,
-            @RequestParam(required = false) Optional<String> email) {
+    public List<T> buscarTodos() {
         return service.findAll();
     }
 
