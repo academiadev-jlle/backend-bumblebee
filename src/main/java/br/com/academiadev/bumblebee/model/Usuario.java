@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,14 +12,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 //import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper=true)
 @EntityListeners(AuditingEntityListener.class)
 @ApiModel(description = "Usuário")
 @Entity
@@ -43,48 +44,5 @@ public class Usuario extends EntidadeAuditavel<Long>{
     public Usuario(Long id) {
         this.id = id;
     }
-
-//    @Override
-//    @ApiModelProperty(hidden = true)
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return null;
-//    }
-
-//    @Override
-//    @ApiModelProperty(hidden = true)
-//    public String getPassword() {
-//        return senha;
-//    }
-//
-//    @Override
-//    @ApiModelProperty(hidden = true)
-//    public String getUsername() {
-//        return email;
-//    }
-//
-//    @Override
-//    @ApiModelProperty(hidden = true)
-//    public boolean isAccountNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    @ApiModelProperty(hidden = true)
-//    public boolean isAccountNonLocked() {
-//        return true;
-//    }
-//
-//    @Override
-//    @ApiModelProperty(hidden = true)
-//    public boolean isCredentialsNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    @ApiModelProperty(hidden = true)
-//    public boolean isEnabled() {
-//        return true;
-//    }
-
 
 }

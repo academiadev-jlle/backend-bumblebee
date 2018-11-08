@@ -38,7 +38,7 @@ public class Pet extends EntidadeAuditavel<Long>{
     private String descricao;
 
     @NotNull
-    @Size(min = 1, max = 1)
+    @Size(min = 1, max = 45)
     @ApiModelProperty(example = "Macho", name = "Sexo")
     private String sexo;
 
