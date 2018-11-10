@@ -3,10 +3,7 @@ package br.com.academiadev.bumblebee.model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -14,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class Entidade<ID> implements EntidadeAbstrata<ID> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(example = "1", name = "Identificador")
     protected ID id;
 
