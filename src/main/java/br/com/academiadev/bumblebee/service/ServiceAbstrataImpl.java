@@ -33,12 +33,12 @@ public class ServiceAbstrataImpl<R extends JpaRepository, T, ID> implements Serv
 
     @Override
     public Page<T> findAll(Pageable pageable) {
-        return repository.findAll( pageable );
+        return repository.findAll(pageable);
     }
 
     @Override
     public List<T> findAllById(Iterable<ID> ids) {
-        return repository.findAllById( ids );
+        return repository.findAllById(ids);
     }
 
     @Override
@@ -48,17 +48,17 @@ public class ServiceAbstrataImpl<R extends JpaRepository, T, ID> implements Serv
 
     @Override
     public void deleteById(ID id) {
-        repository.deleteById( id );
+        repository.deleteById(id);
     }
 
     @Override
     public void delete(T entity) {
-        repository.delete( entity );
+        repository.delete(entity);
     }
 
     @Override
     public void deleteAll(Iterable<? extends T> entities) {
-        repository.deleteAll( entities );
+        repository.deleteAll(entities);
     }
 
     @Override
@@ -68,35 +68,37 @@ public class ServiceAbstrataImpl<R extends JpaRepository, T, ID> implements Serv
 
     @Override
     public <S extends T> S save(S entity) {
-        return (S) repository.save( entity );
+        return (S) repository.save(entity);
     }
 
     @Override
     public <S extends T> List<S> saveAll(Iterable<S> entities) {
-        return repository.saveAll( entities );
+        return repository.saveAll(entities);
     }
 
     @Override
     public Optional<T> findById(ID id) {
-        return repository.findById( id );
+        return repository.findById(id);
     }
 
     @Override//
     public boolean existsById(ID id) {
-        return repository.existsById( id );
+        return repository.existsById(id);
     }
 
     @Override
-    public void flush() { repository.flush(); }
+    public void flush() {
+        repository.flush();
+    }
 
     @Override
     public <S extends T> S saveAndFlush(S entity) {
-        return (S) repository.saveAndFlush( entity );
+        return (S) repository.saveAndFlush(entity);
     }
 
     @Override
     public void deleteInBatch(Iterable<T> entities) {
-        repository.deleteInBatch( entities );
+        repository.deleteInBatch(entities);
     }
 
     @Override
@@ -106,34 +108,36 @@ public class ServiceAbstrataImpl<R extends JpaRepository, T, ID> implements Serv
 
     @Override
     public T getOne(ID id) {
-        return (T) repository.getOne( id );
+        return (T) repository.getOne(id);
     }
 
     @Override
     public <S extends T> Optional<S> findOne(Example<S> example) {
-        return repository.findOne( example );
+        return repository.findOne(example);
     }
 
     @Override
     public <S extends T> List<S> findAll(Example<S> example) {
-        return repository.findAll( example );
+        return repository.findAll(example);
     }
 
     @Override
     public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
-        return repository.findAll( example, sort );
+        return repository.findAll(example, sort);
     }
 
     @Override
-    public <S extends T> Page<S> findAll(Example<S> example, Pageable pageable) { return repository.findAll( example, pageable ); }
+    public <S extends T> Page<S> findAll(Example<S> example, Pageable pageable) {
+        return repository.findAll(example, pageable);
+    }
 
     @Override
     public <S extends T> long count(Example<S> example) {
-        return repository.count( example );
+        return repository.count(example);
     }
 
     @Override
     public <S extends T> boolean exists(Example<S> example) {
-        return repository.exists( example );
+        return repository.exists(example);
     }
 }
