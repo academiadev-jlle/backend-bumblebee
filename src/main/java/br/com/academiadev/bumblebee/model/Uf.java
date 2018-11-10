@@ -1,68 +1,43 @@
 package br.com.academiadev.bumblebee.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-@Where(clause="excluido=false")
-public class Uf {
 
-    @Id
-    @GeneratedValue
-    private Long idUf;
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper=true)
+@EntityListeners(AuditingEntityListener.class)
+@ApiModel(description = "Uf")
+@Entity
+@SQLDelete(sql =
+        "UPDATE Uf " +
+                "SET excluido = true " +
+                "WHERE id = ?")
+@Where(clause="excluido=false")
+public class Uf extends EntidadeAuditavel<Long>{
 
     @NotNull
     @Size(min = 1, max = 45)
+    @ApiModelProperty(example = "Santa Catarina", name = "Nome")
     private String nome;
 
     @NotNull
     @Size(min = 1, max = 45)
+    @ApiModelProperty(example = "SC", name = "Uf")
     private String uf;
 
-    @NotNull
-    @Column(name="excluido")
-    private Boolean excluido = false;
-
-    public Uf(){
-
-    }
-
-    public Long getIdUf() {
-        return idUf;
-    }
-
-    public void setIdUf(Long idUf) {
-        this.idUf = idUf;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-
-    public Boolean getExcluido() {
-        return excluido;
-    }
-
-    public void setExcluido(Boolean excluido) {
-        this.excluido = excluido;
-    }
 
 }
