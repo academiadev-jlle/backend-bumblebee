@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 public class CrudControllerAbstrato<S extends ServiceAbstrata<T, ID>, T, ID> extends ControllerAbstrata<S, T, ID> {
 
     public CrudControllerAbstrato(S service) {
