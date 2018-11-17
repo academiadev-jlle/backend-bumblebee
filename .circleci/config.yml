@@ -32,7 +32,7 @@ jobs:
       - run: sudo apt-get install postgresql-client-9.6
       - run:
           command: |
-            psql -h localhost -U postgres -c "CREATE DATABASE financeiro_test;"
+            psql -h localhost -U postgres -c "CREATE DATABASE bumblebee;"
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "build.gradle" }}
