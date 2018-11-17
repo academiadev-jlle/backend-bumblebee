@@ -20,8 +20,8 @@ public class CrudControllerAbstrato<S extends ServiceAbstrata<T, ID>, T, ID> ext
             @ApiResponse(code = 201, message = "Entidade criada com sucesso")
     })
     @PostMapping
-    public void criar(@RequestBody T usuario) {
-        service.save(usuario);
+    public void criar(@RequestBody T entidade) {
+        service.save(entidade);
     }
 
     @ApiOperation(value = "Retorna uma lista de entidades")
