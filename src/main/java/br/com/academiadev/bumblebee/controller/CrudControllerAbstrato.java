@@ -3,6 +3,7 @@ package br.com.academiadev.bumblebee.controller;
 import br.com.academiadev.bumblebee.service.ServiceAbstrata;
 import io.swagger.annotations.*;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +21,9 @@ public class CrudControllerAbstrato<S extends ServiceAbstrata<T, ID>, T, ID> ext
             @ApiResponse(code = 201, message = "Entidade criada com sucesso")
     })
     @PostMapping
-    public void criar(@RequestBody T entidade) {
+    public ResponseEntity<Object> criar(@RequestBody T entidade) {
         service.save(entidade);
+        return ResponseEntity.ok(entidade);
     }
 
     @ApiOperation(value = "Retorna uma lista de entidades")
