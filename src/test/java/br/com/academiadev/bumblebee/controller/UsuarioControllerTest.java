@@ -50,7 +50,7 @@ public class UsuarioControllerTest {
         mvc.perform( get( "/usuario" )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) )
                 .andExpect( status().isOk() )
-                .andExpect( jsonPath( "$", Matchers.hasSize( 2 ) ) );
+                .andExpect( jsonPath( "$", Matchers.hasSize( 1 ) ) );
     }
 
     @Test
