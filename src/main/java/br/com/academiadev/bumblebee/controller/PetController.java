@@ -2,6 +2,7 @@ package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.model.Pet;
+import br.com.academiadev.bumblebee.model.Usuario;
 import br.com.academiadev.bumblebee.service.PetService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -29,6 +30,15 @@ public class PetController extends CrudControllerAbstrato<PetService, Pet, Long>
     @GetMapping("/categoria/{descricao}")
     public List<Pet> buscarPorCategoria(@PathVariable (value = "descricao") Categoria categoria) {
         return service.findAllByCategoria(categoria);
+    }
+
+    @ApiOperation(value = "Retorna entidades filtradas por usuário")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Entidades encontradas com sucesso")
+    })
+    @GetMapping("/usuario/{usuario}")
+    public List<Pet> buscarPorUsuario(@PathVariable (value = "usuario") Usuario usuario) {
+        return service.findAllByUsuario(usuario);
     }
 
 }
