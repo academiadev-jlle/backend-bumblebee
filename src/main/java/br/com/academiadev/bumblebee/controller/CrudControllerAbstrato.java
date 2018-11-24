@@ -16,45 +16,46 @@ public class CrudControllerAbstrato<S extends ServiceAbstrata<T, ID>, T, ID> ext
         super(service);
     }
 
-    @ApiOperation(value = "Cria uma entidade")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Entidade criada com sucesso")
-    })
-    @PostMapping
-    public ResponseEntity<Object> criar(@RequestBody T entidade) {
-        service.save(entidade);
-        return ResponseEntity.ok(entidade);
-    }
-
-    @ApiOperation(value = "Retorna uma lista de entidades")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Entidades retornadas com sucesso")
-    })
-//    @ApiImplicitParams({ //
-//            @ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+//    @ApiOperation(value = "Cria uma entidade")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 201, message = "Entidade criada com sucesso")
 //    })
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping
-    public List<T> buscarTodos() {
-        return service.findAll();
-    }
-
-    @ApiOperation(value = "Retorna uma entidade")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Entidade encontrado com sucesso")
-    })
-    @GetMapping("/{id}")
-    public T buscarPor(@PathVariable ID id) {
-        return service.findById(id).orElse(null);
-    }
-
-
-    @ApiOperation(value = "Deleta uma entidade")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Entidade deletado com sucesso")
-    })
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable ID id) {
-        service.deleteById(id);
-    }
+//    @PostMapping
+//    public Object criar(@RequestBody T entidade) {
+//        service.save(entidade);
+//
+//        return entidade;
+//    }
+//
+//    @ApiOperation(value = "Retorna uma lista de entidades")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 201, message = "Entidades retornadas com sucesso")
+//    })
+////    @ApiImplicitParams({ //
+////            @ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+////    })
+////    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @GetMapping
+//    public List<T> buscarTodos() {
+//        return service.findAll();
+//    }
+//
+//    @ApiOperation(value = "Retorna uma entidade")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 201, message = "Entidade encontrado com sucesso")
+//    })
+//    @GetMapping("/{id}")
+//    public T buscarPor(@PathVariable ID id) {
+//        return service.findById(id).orElse(null);
+//    }
+//
+//
+//    @ApiOperation(value = "Deleta uma entidade")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 201, message = "Entidade deletado com sucesso")
+//    })
+//    @DeleteMapping("/{id}")
+//    public void deletar(@PathVariable ID id) {
+//        service.deleteById(id);
+//    }
 }
