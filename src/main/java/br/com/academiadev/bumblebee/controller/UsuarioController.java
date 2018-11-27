@@ -36,7 +36,7 @@ public class UsuarioController{
     })
     @GetMapping("/{id}")
     public UsuarioDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
-        Usuario usuario =  repository.findById(id)
+        Usuario usuario =  usuarioService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
         UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
         return usuarioDTOResponse;
@@ -49,7 +49,7 @@ public class UsuarioController{
     @PostMapping
     public UsuarioDTOResponse criar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
         Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
-        repository.save(usuario);
+        usuarioService.save(usuario);
         UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
         return usuarioDTOResponse;
     }
@@ -70,10 +70,10 @@ public class UsuarioController{
     })
     @DeleteMapping("/{id}")
     public UsuarioDTOResponse deletar(@PathVariable Long id) throws ObjectNotFoundException {
-        Usuario usuario = repository.findById(id)
+        Usuario usuario = usuarioService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
         usuario.setExcluido(Boolean.TRUE);
-        repository.save(usuario);
+        usuarioService.save(usuario);
         UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
         return usuarioDTOResponse;
     }
