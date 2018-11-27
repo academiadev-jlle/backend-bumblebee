@@ -1,4 +1,4 @@
-package br.com.academiadev.bumblebee.dto;
+package br.com.academiadev.bumblebee.dto.Usuario;
 
 import lombok.Data;
 
