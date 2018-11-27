@@ -43,7 +43,7 @@ public class Usuario extends EntidadeAuditavel<Long> implements UserDetails {
     private String email;
 
     @NotNull
-    @Size(min = 6, max = 16)
+//    @Size(min = 6, max = 16)
     @ApiModelProperty(example = "123456", name = "Senha")
     private String senha;
 
