@@ -1,8 +1,10 @@
-package br.com.academiadev.bumblebee.dto;
+package br.com.academiadev.bumblebee.dto.Localizacao;
 
 import br.com.academiadev.bumblebee.model.Cidade;
+import lombok.Data;
 
-public class LocalizacaoDTO {
+@Data
+public class LocalizacaoDTOResponse {
 
     private Long id;
     private String logradouro;
