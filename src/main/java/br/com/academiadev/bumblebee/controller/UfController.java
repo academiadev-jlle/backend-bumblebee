@@ -44,8 +44,8 @@ public class UfController{
     })
     @GetMapping("/{id}")
     public UfDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
-        Uf uf =  repository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
+        Uf uf =  ufService.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Uf com id " + id + " não encontrado"));
         UfDTOResponse ufDTOResponse = ufMapper.toDTOResponse(uf);
         return ufDTOResponse;
     }
@@ -57,7 +57,7 @@ public class UfController{
     @PostMapping
     public UfDTOResponse criar(@RequestBody @Valid UfDTO ufDTO) {
         Uf uf = ufMapper.toEntity(ufDTO);
-        repository.save(uf);
+        ufService.save(uf);
         UfDTOResponse ufDTOResponse = ufMapper.toDTOResponse(uf);
         return ufDTOResponse;
     }
@@ -78,10 +78,10 @@ public class UfController{
     })
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) throws ObjectNotFoundException {
-        Uf uf = repository.findById(id)
+        Uf uf = ufService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Uf com id " + id + " não encontrado"));
         uf.setExcluido(Boolean.TRUE);
-        repository.save(uf);
+        ufService.save(uf);
     }
 
 }
