@@ -1,7 +1,7 @@
 package br.com.academiadev.bumblebee.controller;
 
-import br.com.academiadev.bumblebee.dto.UsuarioDTO;
-import br.com.academiadev.bumblebee.dto.UsuarioDTOResponse;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Usuario;
@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
@@ -26,14 +27,19 @@ public class UsuarioController{
     @Autowired
     private UsuarioMapper usuarioMapper;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     @ApiOperation(value = "Retorna uma usuario")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuario encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public Usuario buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
-        return repository.findById(id)
+    public UsuarioDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        Usuario usuario =  repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
+        UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
+        return usuarioDTOResponse;
     }
 
     @ApiOperation(value = "Cria um Usuário")
@@ -48,31 +54,29 @@ public class UsuarioController{
         return usuarioDTOResponse;
     }
 
+    @ApiOperation(value = "Buscar todos os usuários")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Usuários encontrados com sucesso")
+    })
+    @GetMapping("/usuarios")
+    public List<UsuarioDTOResponse> buscarTodos() {
+        List<Usuario> listaUsuario = usuarioService.findAll();
+        return usuarioMapper.toDTOResponse(listaUsuario);
+    }
+
     @ApiOperation(value = "Deleta um Usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuario deletado com sucesso")
     })
     @DeleteMapping("/{id}")
-    public Usuario deletar(@PathVariable Long id) throws ObjectNotFoundException {
+    public UsuarioDTOResponse deletar(@PathVariable Long id) throws ObjectNotFoundException {
         Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
         usuario.setExcluido(Boolean.TRUE);
         repository.save(usuario);
-        return usuario;
+        UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
+        return usuarioDTOResponse;
     }
 
 }
 
-//
-//@RestController
-//@RequestMapping(value = "/usuario")
-//@Api(description = "Usuários")
-//public class UsuarioController extends CrudControllerAbstrato<UsuarioService, Usuario, Long> {
-//
-//    @Autowired
-//    public UsuarioController(UsuarioService service) {
-//        super(service);
-//    }
-//
-//
-//}
