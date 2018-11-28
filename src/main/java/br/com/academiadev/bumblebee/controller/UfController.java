@@ -66,7 +66,7 @@ public class UfController{
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Ufs encontradas com sucesso")
     })
-    @GetMapping("/uf")
+    @GetMapping("/ufs")
     public List<UfDTOResponse> buscarTodos() {
         List<Uf> listaUsuario = ufService.findAll();
         return ufMapper.toDTOResponse(listaUsuario);
