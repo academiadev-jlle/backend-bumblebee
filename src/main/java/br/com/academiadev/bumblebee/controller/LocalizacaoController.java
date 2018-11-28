@@ -65,7 +65,7 @@ public class LocalizacaoController{
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Localizações encontradas com sucesso")
     })
-    @GetMapping("/localizacao")
+    @GetMapping("/localizacoes")
     public List<LocalizacaoDTOResponse> buscarTodos() {
         List<Localizacao> listaLocalizacao = localizacaoService.findAll();
         return localizacaoMapper.toDTOResponse(listaLocalizacao);
