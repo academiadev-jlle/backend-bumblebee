@@ -9,10 +9,12 @@ import br.com.academiadev.bumblebee.mapper.CidadeMapper;
 import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
 import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.model.Localizacao;
+import br.com.academiadev.bumblebee.model.Uf;
 import br.com.academiadev.bumblebee.repository.CidadeRepository;
 import br.com.academiadev.bumblebee.repository.LocalizacaoRepository;
 import br.com.academiadev.bumblebee.service.CidadeService;
 import br.com.academiadev.bumblebee.service.LocalizacaoService;
+import br.com.academiadev.bumblebee.service.UfService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,6 +39,9 @@ public class CidadeController{
     @Autowired
     private CidadeService cidadeService;
 
+    @Autowired
+    private UfService ufService;
+
     @ApiOperation(value = "Retorna um cidade")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Cidade encontrado com sucesso")
@@ -53,9 +58,11 @@ public class CidadeController{
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Cidade criada com sucesso")
     })
-    @PostMapping
-    public CidadeDTOResponse criar(@RequestBody @Valid CidadeDTO cidadeDTO) {
+    @PostMapping("/{uf}")
+    public CidadeDTOResponse criar(@RequestBody @Valid CidadeDTO cidadeDTO, @PathVariable(value = "uf") Long idUf) {
+        Uf uf = ufService.findById(idUf).orElseThrow(()->new ObjectNotFoundException("Uf não encontrada"));
         Cidade cidade = cidadeMapper.toEntity(cidadeDTO);
+        cidade.setUf(uf);
         cidadeService.save(cidade);
         CidadeDTOResponse cidadeDTOResponse = cidadeMapper.toDTOResponse(cidade);
         return cidadeDTOResponse;

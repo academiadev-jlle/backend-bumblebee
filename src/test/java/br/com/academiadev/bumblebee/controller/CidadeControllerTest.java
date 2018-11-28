@@ -35,11 +35,10 @@ public class CidadeControllerTest {
 
     @Test
     public void postCidade() throws Exception {
-        Uf uf = criaUf();
 
-        CidadeDTO cidadeDTO = criaCidadeDTO(uf);
+        CidadeDTO cidadeDTO = criaCidadeDTO();
 
-        String cidadeRetorno = mvc.perform( post( "/cidade" )
+        String cidadeRetorno = mvc.perform( post( "/cidade/{uf}", 2L )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
                 .content( convertObjectToJsonBytes( cidadeDTO ) ) )
                 .andReturn()
@@ -51,17 +50,16 @@ public class CidadeControllerTest {
         mvc.perform( get( "/cidade/{id}", Long.valueOf(idCidade))
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) )
                 .andExpect( jsonPath( "$.nome", is( "Joinville" ) ) )
-                .andExpect( jsonPath( "$.uf.nome", is( "Santa Catarina" ) ) );
+                .andExpect( jsonPath( "$.uf.nome", is( "santa catarina" ) ) );
     }
 
 
     @Test
     public void deleteCidadePorId() throws Exception {
-        Uf uf = criaUf();
 
-        CidadeDTO cidadeDTO = criaCidadeDTO(uf);
+        CidadeDTO cidadeDTO = criaCidadeDTO();
 
-        String cidadeRetorno = mvc.perform( post( "/cidade" )
+        String cidadeRetorno = mvc.perform( post( "/cidade/{uf}", 2L )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
                 .content( convertObjectToJsonBytes( cidadeDTO ) ) )
                 .andReturn()
@@ -82,19 +80,10 @@ public class CidadeControllerTest {
 //                .andExpect( status().isOk() );
 //    }
 
-    private CidadeDTO criaCidadeDTO(Uf uf){
+    private CidadeDTO criaCidadeDTO(){
         CidadeDTO cidadeDTO = new CidadeDTO();
         cidadeDTO.setNome("Joinville");
-        cidadeDTO.setUf(uf);
         return cidadeDTO;
-    }
-
-    private Uf criaUf(){
-        Uf uf = new Uf();
-        uf.setId(4L);
-        uf.setNome("Santa Catarina");
-        uf.setUf("SC");
-        return uf;
     }
 
     public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
