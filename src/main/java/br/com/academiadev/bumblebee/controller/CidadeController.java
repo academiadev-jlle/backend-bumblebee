@@ -65,7 +65,7 @@ public class CidadeController{
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Cidades encontradas com sucesso")
     })
-    @GetMapping("/cidade")
+    @GetMapping("/cidades")
     public List<CidadeDTOResponse> buscarTodos() {
         List<Cidade> listaCidade = cidadeService.findAll();
         return cidadeMapper.toDTOResponse(listaCidade);
