@@ -7,6 +7,4 @@ import lombok.Data;
 public class CidadeDTO {
 
     private String nome;
-    private Uf uf;
-
 }
