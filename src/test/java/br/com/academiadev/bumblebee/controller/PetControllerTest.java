@@ -42,17 +42,10 @@ public class PetControllerTest {
 
     @Test
     public void postPet() throws Exception {
-        Uf uf = criaUf();
 
-        Cidade cidade = criaCidade(uf);
+        PetDTO petDTO = criaPetDTO();
 
-        Localizacao localizacao = criaLocalizacao(cidade);
-
-        Usuario usuario = criaUsuario();
-
-        PetDTO petDTO = criaPetDTO(usuario, localizacao);
-
-        String petRetorno = mvc.perform( post( "/pet" )
+        String petRetorno = mvc.perform( post( "/pet/usuario/{usuario}/localizacao/{localizacao}", 64L, 1L )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
                 .content( convertObjectToJsonBytes( petDTO ) ) )
                 .andReturn()
@@ -65,24 +58,17 @@ public class PetControllerTest {
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) )
                 .andExpect( jsonPath( "$.nome", is( "Totó" ) ) )
                 .andExpect( jsonPath( "$.descricao", is( "Peludo e brincalhão" ) ) )
-                .andExpect( jsonPath( "$.usuario.nome", is( "José da Silva" ) ) )
+                .andExpect( jsonPath( "$.usuario.nome", is( "Bruno Muehlbauer de Souza" ) ) )
                 .andExpect( jsonPath( "$.localizacao.cidade.nome", is( "Joinville" ) ) );
     }
 
 
     @Test
     public void deletePetPorId() throws Exception {
-        Uf uf = criaUf();
 
-        Cidade cidade = criaCidade(uf);
+        PetDTO petDTO = criaPetDTO();
 
-        Localizacao localizacao = criaLocalizacao(cidade);
-
-        Usuario usuario = criaUsuario();
-
-        PetDTO petDTO = criaPetDTO(usuario, localizacao);
-
-        String petRetorno = mvc.perform( post( "/pet" )
+        String petRetorno = mvc.perform( post( "/pet/usuario/{usuario}/localizacao/{localizacao}", 64L, 1L )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
                 .content( convertObjectToJsonBytes( petDTO ) ) )
                 .andReturn()
@@ -112,7 +98,6 @@ public class PetControllerTest {
                 .andExpect( status().isOk() );
     }
 
-
     @Test
     public void buscaTodosPets() throws Exception{
         mvc.perform( get( "/pet/pets" )
@@ -120,10 +105,8 @@ public class PetControllerTest {
                 .andExpect( status().isOk() );
     }
 
-    private PetDTO criaPetDTO(Usuario usuario, Localizacao localizacao){
+    private PetDTO criaPetDTO(){
         PetDTO petDTO = new PetDTO();
-        petDTO.setUsuario(usuario);
-        petDTO.setLocalizacao(localizacao);
         petDTO.setCategoria(Categoria.ADOCAO);
         petDTO.setDescricao("Peludo e brincalhão");
         petDTO.setEspecie(Especie.CACHORRO);
@@ -131,42 +114,6 @@ public class PetControllerTest {
         petDTO.setPorte(Porte.PEQUENO);
         petDTO.setSexo("macho");
         return petDTO;
-    }
-
-
-    private Usuario criaUsuario(){
-        Usuario usuario = new Usuario();
-        usuario.setId(64L);
-        usuario.setNome("José da Silva");
-        usuario.setEmail("teste@teste.com");
-        usuario.setSenha("123456");
-        return usuario;
-    }
-
-    private Localizacao criaLocalizacao(Cidade cidade){
-        Localizacao localizacao = new Localizacao();
-        localizacao.setId(1L);
-        localizacao.setCidade(cidade);
-        localizacao.setBairro("Ubatuba");
-        localizacao.setLogradouro("Capinzal");
-        localizacao.setReferencia("Casa com muro branco");
-        return localizacao;
-    }
-
-    private Cidade criaCidade(Uf uf){
-        Cidade cidade = new Cidade();
-        cidade.setId(1L);
-        cidade.setNome("Joinville");
-        cidade.setUf(uf);
-        return cidade;
-    }
-
-    private Uf criaUf(){
-        Uf uf = new Uf();
-        uf.setId(1L);
-        uf.setNome("Santa Catarina");
-        uf.setUf("SC");
-        return uf;
     }
 
     public static byte[] convertObjectToJsonBytes(Object object) throws IOException {

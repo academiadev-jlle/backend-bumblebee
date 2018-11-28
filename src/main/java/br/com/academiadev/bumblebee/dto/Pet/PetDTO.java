@@ -15,8 +15,6 @@ public class PetDTO {
     private String nome;
     private String descricao;
     private String Sexo;
-    private Usuario usuario;
-    private Localizacao localizacao;
     private Categoria categoria;
     private Porte porte;
     private Especie especie;

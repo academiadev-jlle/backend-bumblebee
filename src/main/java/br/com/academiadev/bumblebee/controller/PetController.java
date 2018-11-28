@@ -16,6 +16,7 @@ import br.com.academiadev.bumblebee.repository.LocalizacaoRepository;
 import br.com.academiadev.bumblebee.repository.PetRepository;
 import br.com.academiadev.bumblebee.service.LocalizacaoService;
 import br.com.academiadev.bumblebee.service.PetService;
+import br.com.academiadev.bumblebee.service.UsuarioService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -42,6 +43,12 @@ public class PetController{
     @Autowired
     private PetService petService;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private LocalizacaoService localizacaoService;
+
     @ApiOperation(value = "Retorna um pet")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Pet encontrado com sucesso")
@@ -58,10 +65,16 @@ public class PetController{
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Pet criada com sucesso")
     })
-    @PostMapping
-    public PetDTOResponse criar(@RequestBody @Valid PetDTO petDTO) {
+    @PostMapping("/usuario/{usuario}/localizacao/{localizacao}")
+    public PetDTOResponse criar(@RequestBody @Valid PetDTO petDTO,
+                                @PathVariable(value = "usuario") Long idUsuario,
+                                @PathVariable(value = "localizacao") Long idLocalizacao) {
         Pet pet = petMapper.toEntity(petDTO);
         Date now = new Date();
+        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
+        Localizacao localizacao = localizacaoService.findById(idLocalizacao).orElseThrow(()->new ObjectNotFoundException("Localização não encontrada"));
+        pet.setUsuario(usuario);
+        pet.setLocalizacao(localizacao);
         pet.setDataPostagem(now);
         petService.save(pet);
         PetDTOResponse petDTOResponse = petMapper.toDTOResponse(pet);
