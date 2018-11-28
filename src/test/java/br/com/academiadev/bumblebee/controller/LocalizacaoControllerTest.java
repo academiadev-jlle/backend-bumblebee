@@ -38,13 +38,10 @@ public class LocalizacaoControllerTest {
 
     @Test
     public void postLocalizacao() throws Exception {
-        Uf uf = criaUf();
 
-        Cidade cidade = criaCidade(uf);
+        LocalizacaoDTO localizacaoDTO = criaLocalizacao();
 
-        LocalizacaoDTO localizacaoDTO = criaLocalizacao(cidade);
-
-        String localizacaoRetorno = mvc.perform( post( "/localizacao" )
+        String localizacaoRetorno = mvc.perform( post( "/localizacao/cidade/{cidade}", 1L )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
                 .content( convertObjectToJsonBytes( localizacaoDTO ) ) )
                 .andReturn()
@@ -64,13 +61,10 @@ public class LocalizacaoControllerTest {
 
     @Test
     public void deleteLocalizacaoPorId() throws Exception {
-        Uf uf = criaUf();
 
-        Cidade cidade = criaCidade(uf);
+        LocalizacaoDTO localizacaoDTO = criaLocalizacao();
 
-        LocalizacaoDTO localizacaoDTO = criaLocalizacao(cidade);
-
-        String localizacaoRetorno = mvc.perform( post( "/localizacao" )
+        String localizacaoRetorno = mvc.perform( post( "/localizacao/cidade/{cidade}", 1L )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
                 .content( convertObjectToJsonBytes( localizacaoDTO ) ) )
                 .andReturn()
@@ -91,29 +85,12 @@ public class LocalizacaoControllerTest {
                 .andExpect( status().isOk() );
     }
 
-    private LocalizacaoDTO criaLocalizacao(Cidade cidade){
+    private LocalizacaoDTO criaLocalizacao(){
         LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
-        localizacaoDTO.setCidade(cidade);
         localizacaoDTO.setBairro("Ubatuba");
         localizacaoDTO.setLogradouro("Capinzal");
         localizacaoDTO.setReferencia("Casa com muro branco");
         return localizacaoDTO;
-    }
-
-    private Cidade criaCidade(Uf uf){
-        Cidade cidade = new Cidade();
-        cidade.setId(1L);
-        cidade.setNome("Joinville");
-        cidade.setUf(uf);
-        return cidade;
-    }
-
-    private Uf criaUf(){
-        Uf uf = new Uf();
-        uf.setId(1L);
-        uf.setNome("Santa Catarina");
-        uf.setUf("SC");
-        return uf;
     }
 
     public static byte[] convertObjectToJsonBytes(Object object) throws IOException {

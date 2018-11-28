@@ -9,5 +9,5 @@ public class LocalizacaoDTO {
     private String logradouro;
     private String bairro;
     private String referencia;
-    private Cidade cidade;
+
 }
