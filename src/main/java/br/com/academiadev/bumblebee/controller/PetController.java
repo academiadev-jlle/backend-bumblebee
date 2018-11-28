@@ -72,7 +72,7 @@ public class PetController{
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
-    @GetMapping("/pet")
+    @GetMapping("/pets")
     public List<PetDTOResponse> buscarTodos() {
         List<Pet> listaPets = petService.findAll();
         return petMapper.toDTOResponse(listaPets);
