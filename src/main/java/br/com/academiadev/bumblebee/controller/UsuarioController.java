@@ -5,16 +5,13 @@ import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Usuario;
-import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 import br.com.academiadev.bumblebee.service.UsuarioService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
 import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/usuario")
@@ -79,4 +76,3 @@ public class UsuarioController{
     }
 
 }
-
