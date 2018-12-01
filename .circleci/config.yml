@@ -6,14 +6,14 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-      - image: circleci/postgres:9.6.5-alpine-ram
+    # specify the version you desire here
+    - image: circleci/openjdk:8-jdk
+    - image: circleci/postgres:9.6.5-alpine-ram
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+    # Specify service dependencies here if necessary
+    # CircleCI maintains a library of pre-built images
+    # documented at https://circleci.com/docs/2.0/circleci-images/
+    # - image: circleci/postgres:9.4
 
     working_directory: ~/repo
 
@@ -26,23 +26,23 @@ jobs:
       DATABASE_PASSWORD: postgres
 
     steps:
-      - checkout
+    - checkout
 
-      - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client-9.6
-      - run:
-          command: |
-            psql -h localhost -U postgres -c "CREATE DATABASE bumblebee;"
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
+    - run: sudo apt-get update
+    - run: sudo apt-get install postgresql-client-9.6
+    - run:
+        command: |
+          psql -h localhost -U postgres -c "CREATE DATABASE bumblebee;"
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "build.gradle" }}
+        - v1-dependencies-
 
-      - run: gradle dependencies
+    - run: ./gradlew dependencies
 
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+    - save_cache:
+        paths:
+        - ~/.gradle
+        key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: gradle test
+    - run: ./gradlew test

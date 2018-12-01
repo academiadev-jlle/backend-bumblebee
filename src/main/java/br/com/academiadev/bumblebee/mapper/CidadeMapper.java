@@ -1,21 +1,22 @@
 package br.com.academiadev.bumblebee.mapper;
 
-import br.com.academiadev.bumblebee.dto.CidadeDTO;
+import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTO;
+import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.model.Cidade;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.mapstruct.Mapper;
 
+import java.util.List;
+
+@Mapper(componentModel = "spring")
 public interface CidadeMapper extends EntityMapper<Cidade, CidadeDTO> {
-    @Mappings({
 
-            @Mapping(source = "createdAt", target = "created_at", dateFormat = "dd/MM/yyyy HH:mm")
-    })
-    @Override
     CidadeDTO toDTO(Cidade entity);
 
-    @Mappings({
-            @Mapping(target = "createdAt", source = "created_at", dateFormat = "dd/MM/yyyy HH:mm")
-    })
+    CidadeDTOResponse toDTOResponse(Cidade entity);
+
+    List<CidadeDTOResponse> toDTOResponse(List<Cidade> entity);
+
     @Override
     Cidade toEntity(CidadeDTO cidadeDTO);
 }
+

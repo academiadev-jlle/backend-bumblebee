@@ -1,21 +1,25 @@
 package br.com.academiadev.bumblebee.mapper;
 
-import br.com.academiadev.bumblebee.dto.UfDTO;
+import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
+import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
 import br.com.academiadev.bumblebee.model.Uf;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-public interface UfMapper extends EntityMapper<Uf, UfDTO>{
-    @Mappings({
+import javax.persistence.OneToOne;
+import java.util.List;
 
-            @Mapping(source = "createdAt", target = "created_at", dateFormat = "dd/MM/yyyy HH:mm")
-    })
+@Mapper(componentModel = "spring")
+public interface UfMapper extends EntityMapper<Uf, UfDTO>{
+
     @Override
     UfDTO toDTO(Uf entity);
 
-    @Mappings({
-            @Mapping(target = "createdAt", source = "created_at", dateFormat = "dd/MM/yyyy HH:mm")
-    })
     @Override
     Uf toEntity(UfDTO ufDTO);
+
+    UfDTOResponse toDTOResponse(Uf entity);
+
+    List<UfDTOResponse> toDTOResponse(List<Uf> entity);
 }
