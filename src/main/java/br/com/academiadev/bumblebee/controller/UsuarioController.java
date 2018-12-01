@@ -10,7 +10,6 @@ import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 import br.com.academiadev.bumblebee.service.UsuarioService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import javax.validation.Valid;

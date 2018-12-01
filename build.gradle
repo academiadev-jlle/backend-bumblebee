@@ -42,12 +42,13 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.2.0.Final'
 
     apt('org.mapstruct:mapstruct-processor:1.2.0.Final')
-    
+
     compileOnly 'org.mapstruct:mapstruct-processor:1.2.0.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.security:spring-security-test')
+
     runtimeOnly('org.postgresql:postgresql:42.2.2')
 
     compile('io.springfox:springfox-swagger2:2.9.2')

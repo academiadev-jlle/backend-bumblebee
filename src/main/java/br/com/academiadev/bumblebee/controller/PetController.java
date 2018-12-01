@@ -106,8 +106,9 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/categoria/{descricao}")
-    public List<Pet> buscarPorCategoria(@PathVariable (value = "descricao") Categoria categoria) {
-        return petService.findAllByCategoria(categoria);
+    public List<PetDTOResponse> buscarPorCategoria(@PathVariable (value = "descricao") Categoria categoria) {
+        List<Pet> pets = petService.findAllByCategoria(categoria);
+        return petMapper.toDTOResponse(pets);
     }
 
     @ApiOperation(value = "Retorna pets filtradas por usuário")
@@ -115,8 +116,9 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/usuario/{usuario}")
-    public List<Pet> buscarPorUsuario(@PathVariable (value = "usuario") Usuario usuario) {
-        return petService.findAllByUsuario(usuario);
+    public List<PetDTOResponse> buscarPorUsuario(@PathVariable (value = "usuario") Usuario usuario) {
+        List<Pet> pets = petService.findAllByUsuario(usuario);
+        return petMapper.toDTOResponse(pets);
     }
 
     @ApiOperation(value = "Atualiza um pet")
