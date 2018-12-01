@@ -1,32 +1,26 @@
 package br.com.academiadev.bumblebee.controller;
 
-import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
-import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
-import br.com.academiadev.bumblebee.mapper.FotoPetMapper;
-import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
 import br.com.academiadev.bumblebee.mapper.PetMapper;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
-import br.com.academiadev.bumblebee.repository.LocalizacaoRepository;
 import br.com.academiadev.bumblebee.repository.PetRepository;
 import br.com.academiadev.bumblebee.service.LocalizacaoService;
 import br.com.academiadev.bumblebee.service.PetService;
 import br.com.academiadev.bumblebee.service.UsuarioService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.Api;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -106,7 +100,7 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/categoria/{descricao}")
-    public List<PetDTOResponse> buscarPorCategoria(@PathVariable (value = "descricao") Categoria categoria) {
+    public List<PetDTOResponse> buscarPorCategoria(@PathVariable(value = "descricao") Categoria categoria) {
         List<Pet> pets = petService.findAllByCategoria(categoria);
         return petMapper.toDTOResponse(pets);
     }
@@ -116,7 +110,7 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/usuario/{usuario}")
-    public List<PetDTOResponse> buscarPorUsuario(@PathVariable (value = "usuario") Usuario usuario) {
+    public List<PetDTOResponse> buscarPorUsuario(@PathVariable(value = "usuario") Usuario usuario) {
         List<Pet> pets = petService.findAllByUsuario(usuario);
         return petMapper.toDTOResponse(pets);
     }
