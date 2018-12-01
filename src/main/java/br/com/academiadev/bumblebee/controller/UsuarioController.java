@@ -1,10 +1,12 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Usuario;
+import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 import br.com.academiadev.bumblebee.service.UsuarioService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +37,7 @@ public class UsuarioController{
     public UsuarioDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
         Usuario usuario =  usuarioService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
-        UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
-        return usuarioDTOResponse;
+        return usuarioMapper.toDTOResponse(usuario);
     }
 
     @ApiOperation(value = "Cria um Usuário")
@@ -47,8 +48,7 @@ public class UsuarioController{
     public UsuarioDTOResponse criar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
         Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
         usuarioService.save(usuario);
-        UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
-        return usuarioDTOResponse;
+        return usuarioMapper.toDTOResponse(usuario);
     }
 
     @ApiOperation(value = "Buscar todos os usuários")
@@ -71,6 +71,17 @@ public class UsuarioController{
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
         usuario.setExcluido(Boolean.TRUE);
         usuarioService.save(usuario);
+        return usuarioMapper.toDTOResponse(usuario);
+    }
+
+    @ApiOperation(value = "Atualiza um Usuário")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Usuário atualizado com sucesso")
+    })
+    @PostMapping("/update")
+    public UsuarioDTOResponse updateUsuario(@RequestBody @Valid UsuarioDTOResponse usuarioDTORequest) {
+        Usuario usuario = usuarioMapper.toEntityUpdate(usuarioDTORequest);
+        usuarioService.saveAndFlush(usuario);
         UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
         return usuarioDTOResponse;
     }

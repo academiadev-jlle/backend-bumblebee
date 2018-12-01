@@ -4,6 +4,7 @@ import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
+import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.FotoPetMapper;
@@ -69,13 +70,10 @@ public class PetController{
     public PetDTOResponse criar(@RequestBody @Valid PetDTO petDTO,
                                 @PathVariable(value = "usuario") Long idUsuario,
                                 @PathVariable(value = "localizacao") Long idLocalizacao) {
-        Pet pet = petMapper.toEntity(petDTO);
-        Date now = new Date();
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
         Localizacao localizacao = localizacaoService.findById(idLocalizacao).orElseThrow(()->new ObjectNotFoundException("Localização não encontrada"));
-        pet.setUsuario(usuario);
-        pet.setLocalizacao(localizacao);
-        pet.setDataPostagem(now);
+        Date now = new Date();
+        Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
         PetDTOResponse petDTOResponse = petMapper.toDTOResponse(pet);
         return petDTOResponse;
@@ -119,6 +117,26 @@ public class PetController{
     @GetMapping("/usuario/{usuario}")
     public List<Pet> buscarPorUsuario(@PathVariable (value = "usuario") Usuario usuario) {
         return petService.findAllByUsuario(usuario);
+    }
+
+    @ApiOperation(value = "Atualiza um pet")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Pet criada com sucesso")
+    })
+    @PostMapping("/update/usuario/{usuario}/localizacao/{localizacao}")
+    public PetDTOResponse updatePet(@RequestBody @Valid PetDTOUpdate petDTO,
+                                @PathVariable(value = "usuario") Long idUsuario,
+                                @PathVariable(value = "localizacao") Long idLocalizacao) {
+        Pet pet = petMapper.toEntityUpdate(petDTO);
+        Date now = new Date();
+        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
+        Localizacao localizacao = localizacaoService.findById(idLocalizacao).orElseThrow(()->new ObjectNotFoundException("Localização não encontrada"));
+        pet.setUsuario(usuario);
+        pet.setLocalizacao(localizacao);
+        pet.setDataPostagem(now);
+        petService.save(pet);
+        PetDTOResponse petDTOResponse = petMapper.toDTOResponse(pet);
+        return petDTOResponse;
     }
 
 }

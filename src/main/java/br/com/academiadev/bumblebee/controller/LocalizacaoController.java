@@ -2,6 +2,7 @@ package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
+import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOUpdate;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
@@ -89,6 +90,21 @@ public class LocalizacaoController{
                 .orElseThrow(() -> new ObjectNotFoundException("Localização com id " + id + " não encontrado"));
         localizacao.setExcluido(Boolean.TRUE);
         localizacaoService.save(localizacao);
+    }
+
+    @ApiOperation(value = "Cria um localização")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Localização criada com sucesso")
+    })
+    @PostMapping("atualiza/cidade/{cidade}")
+    public LocalizacaoDTOResponse atualizaLocalizacao(@RequestBody @Valid LocalizacaoDTOUpdate localizacaoDTO,
+                                        @PathVariable(value = "cidade") Long idCidade){
+        Localizacao localizacao = localizacaoMapper.toEntityUpdate(localizacaoDTO);
+        Cidade cidade = cidadeService.findById(idCidade).orElseThrow(()->new ObjectNotFoundException("Cidade não encontrada"));
+        localizacao.setCidade(cidade);
+        localizacaoService.saveAndFlush(localizacao);
+        LocalizacaoDTOResponse localizacaoDTOResponse = localizacaoMapper.toDTOResponse(localizacao);
+        return localizacaoDTOResponse;
     }
 
 }

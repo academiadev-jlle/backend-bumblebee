@@ -3,8 +3,11 @@ package br.com.academiadev.bumblebee.mapper;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
+import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOUpdate;
+import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
 import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.model.Localizacao;
+import br.com.academiadev.bumblebee.model.Pet;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -23,5 +26,8 @@ public interface LocalizacaoMapper extends EntityMapper<Localizacao, Localizacao
     LocalizacaoDTOResponse toDTOResponse(Localizacao entity);
 
     List<LocalizacaoDTOResponse> toDTOResponse(List<Localizacao> entity);
+
+    Localizacao toEntityUpdate(LocalizacaoDTOUpdate localizacaoDTOUpdate);
+
 
 }

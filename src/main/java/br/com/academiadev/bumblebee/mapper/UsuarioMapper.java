@@ -18,6 +18,9 @@ public interface UsuarioMapper extends EntityMapper<Usuario, UsuarioDTO> {
 
     List<UsuarioDTOResponse> toDTOResponse(List<Usuario> entity);
 
+    Usuario toEntityUpdate(UsuarioDTOResponse usuarioDTOResponse);
+
     @Override
     Usuario toEntity(UsuarioDTO usuarioDTO);
+
 }
