@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class PetControllerTest {
+public class PetControllerTest extends AbstractControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -43,47 +43,27 @@ public class PetControllerTest {
     @Test
     public void postPet() throws Exception {
 
-        PetDTO petDTO = criaPetDTO();
-
-        String petRetorno = mvc.perform( post( "/pet/usuario/{usuario}/localizacao/{localizacao}", 64L, 1L )
-                .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
-                .content( convertObjectToJsonBytes( petDTO ) ) )
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        Integer idPet = (Integer) new JSONObject(petRetorno).get("id");
-
-        mvc.perform( get( "/pet/{id}", Long.valueOf(idPet))
+        mvc.perform( get( "/pet/{id}", getPetId())
+                .header("Authorization", "Bearer " + getToken())
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) )
                 .andExpect( jsonPath( "$.nome", is( "Totó" ) ) )
                 .andExpect( jsonPath( "$.descricao", is( "Peludo e brincalhão" ) ) )
-                .andExpect( jsonPath( "$.usuario.nome", is( "Bruno Muehlbauer de Souza" ) ) )
+                .andExpect( jsonPath( "$.usuario.nome", is( "José da Silva" ) ) )
                 .andExpect( jsonPath( "$.localizacao.cidade.nome", is( "Joinville" ) ) );
     }
 
 
     @Test
     public void deletePetPorId() throws Exception {
-
-        PetDTO petDTO = criaPetDTO();
-
-        String petRetorno = mvc.perform( post( "/pet/usuario/{usuario}/localizacao/{localizacao}", 64L, 1L )
-                .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE )
-                .content( convertObjectToJsonBytes( petDTO ) ) )
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        Integer idPet = (Integer) new JSONObject(petRetorno).get("id");
-
-        mvc.perform( delete( "/pet/{id}", Long.valueOf(idPet))
+        mvc.perform( delete( "/pet/{id}", getPetId())
+                .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void buscarPorCategoria() throws Exception{
+        getPetId();
         mvc.perform( get( "/pet/categoria/ADOCAO" )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) )
                 .andExpect( jsonPath( "$[0].categoria", is( "ADOCAO" ) ) )
@@ -92,38 +72,18 @@ public class PetControllerTest {
 
     @Test
     public void buscarPorUsuario() throws Exception{
-        mvc.perform( get( "/pet/usuario/64" )
+        mvc.perform( get( "/pet/usuario/{usuario}", getPetUsuarioId())
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) )
-                .andExpect( jsonPath( "$[0].usuario.nome", is( "Bruno Muehlbauer de Souza" ) ) )
+                .andExpect( jsonPath( "$[0].usuario.nome", is( "José da Silva" ) ) )
                 .andExpect( status().isOk() );
     }
 
     @Test
     public void buscaTodosPets() throws Exception{
+        getPetId();
         mvc.perform( get( "/pet/pets" )
                 .contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) )
                 .andExpect( status().isOk() );
-    }
-
-    private PetDTO criaPetDTO(){
-        PetDTO petDTO = new PetDTO();
-        petDTO.setCategoria(Categoria.ADOCAO);
-        petDTO.setDescricao("Peludo e brincalhão");
-        petDTO.setEspecie(Especie.CACHORRO);
-        petDTO.setNome("Totó");
-        petDTO.setPorte(Porte.PEQUENO);
-        petDTO.setSexo("macho");
-        return petDTO;
-    }
-
-    public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion( JsonInclude.Include.NON_NULL );
-
-        JavaTimeModule module = new JavaTimeModule();
-        mapper.registerModule( module );
-
-        return mapper.writeValueAsBytes( object );
     }
 
 }
