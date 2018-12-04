@@ -1,17 +1,16 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.FotoDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
+import br.com.academiadev.bumblebee.mapper.FotoMapper;
 import br.com.academiadev.bumblebee.mapper.PetMapper;
-import br.com.academiadev.bumblebee.model.Foto;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
-import br.com.academiadev.bumblebee.repository.FotoRepository;
-import br.com.academiadev.bumblebee.repository.PetRepository;
 import br.com.academiadev.bumblebee.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,8 +18,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +49,9 @@ public class PetController{
     private UfService ufService;
 
     @Autowired
-    private FotoRepository fotoRepository;
+    private FotoService fotoService;
+
+    private FotoMapper fotoMapper;
 
     @ApiOperation(value = "Retorna um pet")
     @ApiResponses(value = {
@@ -68,17 +71,38 @@ public class PetController{
     @PostMapping("/usuario/{usuario}/localizacao/{localizacao}")
     public PetDTOResponse criar(@RequestBody @Valid PetDTO petDTO,
                                 @PathVariable(value = "usuario") Long idUsuario,
-                                @PathVariable(value = "localizacao") Long idLocalizacao) {
+                                @PathVariable(value = "localizacao") Long idLocalizacao,
+                                @RequestParam("files") MultipartFile[] files) throws IOException {
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
         Localizacao localizacao = localizacaoService.findById(idLocalizacao).orElseThrow(()->new ObjectNotFoundException("Localização não encontrada"));
         Date now = new Date();
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
 
-        for (Foto foto : petDTO.getFotos()) {
-            foto.setPet(pet);
-            fotoRepository.saveAndFlush(foto);
+        for (MultipartFile file : files) {
+
+            if (file.isEmpty()) {
+                continue; //next pls
+            }
+
+            byte[] bytes = file.getBytes();
+            FotoDTO fotoDTO = new FotoDTO();
+            fotoDTO.setPet(pet);
+            fotoDTO.setFoto(bytes);
+            fotoService.save(fotoMapper.toEntity(fotoDTO));
+
         }
+
+
+//        for (FotoPetDTO fotoPetDTO : petDTO.getFotos()) {
+//            FotoDTO fotoDTO = new FotoDTO();
+//            fotoDTO.setFoto(FileCopyUtils.copyToByteArray(fotoPetDTO.getFoto()));
+//            fotoDTO.setPet(pet);
+//            fotoService.save(fotoMapper.toEntity(fotoDTO));
+
+//            foto.setPet(pet);
+//            fotoRepository.saveAndFlush(foto);
+//        }
 
         return petMapper.toDTOResponse(pet);
     }
