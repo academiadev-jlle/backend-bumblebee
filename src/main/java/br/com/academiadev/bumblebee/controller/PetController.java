@@ -6,9 +6,11 @@ import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.PetMapper;
+import br.com.academiadev.bumblebee.model.Foto;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
+import br.com.academiadev.bumblebee.repository.FotoRepository;
 import br.com.academiadev.bumblebee.repository.PetRepository;
 import br.com.academiadev.bumblebee.service.*;
 import io.swagger.annotations.Api;
@@ -45,6 +47,8 @@ public class PetController{
     @Autowired
     private UfService ufService;
 
+    @Autowired
+    private FotoRepository fotoRepository;
 
     @ApiOperation(value = "Retorna um pet")
     @ApiResponses(value = {
@@ -70,6 +74,12 @@ public class PetController{
         Date now = new Date();
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
+
+        for (Foto foto : petDTO.getFotos()) {
+            foto.setPet(pet);
+            fotoRepository.saveAndFlush(foto);
+        }
+
         return petMapper.toDTOResponse(pet);
     }
 

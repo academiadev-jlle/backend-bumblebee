@@ -27,8 +27,15 @@ import javax.validation.constraints.NotNull;
 @Where(clause = "excluido=false")
 public class Foto extends EntidadeAuditavel<Long>{
 
+//    @NotNull
+//    @ApiModelProperty(example = "foto/pet.jpg", name = "Arquivo")
+//    private String arquivo;
+
+    @Lob
     @NotNull
-    @ApiModelProperty(example = "foto/pet.jpg", name = "Arquivo")
-    private String arquivo;
+    private byte[] image;
+
+    @ManyToOne(optional = false)
+    private Pet pet;
 
 }
