@@ -10,9 +10,7 @@ import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
 import br.com.academiadev.bumblebee.repository.PetRepository;
-import br.com.academiadev.bumblebee.service.LocalizacaoService;
-import br.com.academiadev.bumblebee.service.PetService;
-import br.com.academiadev.bumblebee.service.UsuarioService;
+import br.com.academiadev.bumblebee.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -30,9 +28,6 @@ import java.util.List;
 public class PetController{
 
     @Autowired
-    private PetRepository petRepository;
-
-    @Autowired
     private PetMapper petMapper;
 
     @Autowired
@@ -43,6 +38,13 @@ public class PetController{
 
     @Autowired
     private LocalizacaoService localizacaoService;
+
+    @Autowired
+    private CidadeService cidadeService;
+
+    @Autowired
+    private UfService ufService;
+
 
     @ApiOperation(value = "Retorna um pet")
     @ApiResponses(value = {
@@ -119,15 +121,11 @@ public class PetController{
     })
     @PostMapping("/update/usuario/{usuario}/localizacao/{localizacao}")
     public PetDTOResponse updatePet(@RequestBody @Valid PetDTOUpdate petDTO,
-                                @PathVariable(value = "usuario") Long idUsuario,
-                                @PathVariable(value = "localizacao") Long idLocalizacao) {
-        Pet pet = petMapper.toEntityUpdate(petDTO);
+                                @PathVariable(value = "usuario") Long idUsuario) {
         Date now = new Date();
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
-        Localizacao localizacao = localizacaoService.findById(idLocalizacao).orElseThrow(()->new ObjectNotFoundException("Localização não encontrada"));
-        pet.setUsuario(usuario);
-        pet.setLocalizacao(localizacao);
-        pet.setDataPostagem(now);
+        Pet pet = petMapper.toEntityUpdate(petDTO, usuario, now);
+        localizacaoService.save(pet.getLocalizacao());
         petService.save(pet);
         PetDTOResponse petDTOResponse = petMapper.toDTOResponse(pet);
         return petDTOResponse;

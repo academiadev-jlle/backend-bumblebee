@@ -39,17 +39,16 @@ public interface PetMapper extends EntityMapper<Pet, PetDTO> {
 
     PetDTOResponse toDTOResponse(Pet entity);
 
-//    @Mappings({
-//            @Mapping(target = "nome", source = "petDTOUpdate.nome"),
-//            @Mapping(target = "updatedAt", ignore = true),
-//            @Mapping(target = "id", ignore = true),
-//            @Mapping(target = "excluido", ignore = true),
-//            @Mapping(source = "usuario", target = "usuario"),
-//            @Mapping(source = "localizacao", target = "localizacao"),
-//            @Mapping(source = "now", target = "dataPostagem"),
-//            @Mapping(target = "createdAt", ignore = true),
-//    })
-    Pet toEntityUpdate(PetDTOUpdate petDTOUpdate);
+    @Mappings({
+            @Mapping(target = "updatedAt", ignore = true),
+            @Mapping(source = "petDTOUpdate.id", target = "id"),
+            @Mapping(target = "excluido", ignore = true),
+            @Mapping(source = "usuario", target = "usuario"),
+            @Mapping(source = "petDTOUpdate.nome", target = "nome"),
+            @Mapping(source = "now", target = "dataPostagem"),
+            @Mapping(target = "createdAt", ignore = true),
+    })
+    Pet toEntityUpdate(PetDTOUpdate petDTOUpdate, Usuario usuario, Date now);
 
     List<PetDTOResponse> toDTOResponse(List<Pet> entity);
 }
