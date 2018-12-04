@@ -52,8 +52,7 @@ public class PetController{
     public PetDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
         Pet pet =  petService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Pet com id " + id + " não encontrado"));
-        PetDTOResponse petDTOResponse = petMapper.toDTOResponse(pet);
-        return petDTOResponse;
+        return petMapper.toDTOResponse(pet);
     }
 
     @ApiOperation(value = "Cria um pet")
@@ -69,8 +68,7 @@ public class PetController{
         Date now = new Date();
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
-        PetDTOResponse petDTOResponse = petMapper.toDTOResponse(pet);
-        return petDTOResponse;
+        return petMapper.toDTOResponse(pet);
     }
 
     @ApiOperation(value = "Buscar todos as pets")

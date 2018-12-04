@@ -2,18 +2,11 @@ package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTO;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
-import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
-import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.CidadeMapper;
-import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
 import br.com.academiadev.bumblebee.model.Cidade;
-import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Uf;
-import br.com.academiadev.bumblebee.repository.CidadeRepository;
-import br.com.academiadev.bumblebee.repository.LocalizacaoRepository;
 import br.com.academiadev.bumblebee.service.CidadeService;
-import br.com.academiadev.bumblebee.service.LocalizacaoService;
 import br.com.academiadev.bumblebee.service.UfService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,10 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cidade")
 @Api(description = "Cidades")
-public class CidadeController{
-
-    @Autowired
-    private CidadeRepository cidadeRepository;
+public class CidadeController {
 
     @Autowired
     private CidadeMapper cidadeMapper;
@@ -48,10 +38,9 @@ public class CidadeController{
     })
     @GetMapping("/{id}")
     public CidadeDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
-        Cidade cidade =  cidadeService.findById(id)
+        Cidade cidade = cidadeService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Cidade com id " + id + " não encontrado"));
-        CidadeDTOResponse cidadeDTOResponse= cidadeMapper.toDTOResponse(cidade);
-        return cidadeDTOResponse;
+        return cidadeMapper.toDTOResponse(cidade);
     }
 
     @ApiOperation(value = "Cria uma cidade")
@@ -60,12 +49,11 @@ public class CidadeController{
     })
     @PostMapping("/{uf}")
     public CidadeDTOResponse criar(@RequestBody @Valid CidadeDTO cidadeDTO, @PathVariable(value = "uf") Long idUf) {
-        Uf uf = ufService.findById(idUf).orElseThrow(()->new ObjectNotFoundException("Uf não encontrada"));
+        Uf uf = ufService.findById(idUf).orElseThrow(() -> new ObjectNotFoundException("Uf não encontrada"));
         Cidade cidade = cidadeMapper.toEntity(cidadeDTO);
         cidade.setUf(uf);
         cidadeService.save(cidade);
-        CidadeDTOResponse cidadeDTOResponse = cidadeMapper.toDTOResponse(cidade);
-        return cidadeDTOResponse;
+        return cidadeMapper.toDTOResponse(cidade);
     }
 
     @ApiOperation(value = "Buscar todas as cidades")
