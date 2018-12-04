@@ -3,6 +3,7 @@ package br.com.academiadev.bumblebee.controller;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -21,39 +22,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class LocalizacaoControllerTest extends AbstractControllerTest {
+public class BairroControllerTest extends AbstractControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
+    @Value("${security.oauth2.client.client-id}")
+    private String client;
+
+    @Value("${security.oauth2.client.client-secret}")
+    private String secret;
+
     @Test
-    public void postLocalizacao() throws Exception {
-
-        mvc.perform(get("/localizacao/{id}", getLocalizacaoId())
+    public void postBairro() throws Exception {
+        mvc.perform(get("/bairro/{id}", getBairroId())
+                .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.logradouro", is("Capinzal")))
-                .andExpect(jsonPath("$.bairro.nome", is("Comasa")))
-                .andExpect(jsonPath("$.cidade.nome", is("Joinville")))
-                .andExpect(jsonPath("$.bairro.nome", is("Comasa")))
-                .andExpect(jsonPath("$.cidade.uf.nome", is("Santa Catarina")));
-
+                .andExpect(jsonPath("$.nome", is("Comasa")));
     }
 
-
     @Test
-    public void deleteLocalizacaoPorId() throws Exception {
+    public void deleteBairroPorId() throws Exception {
 
-        mvc.perform(delete("/localizacao/{id}", getLocalizacaoId())
+        mvc.perform(delete("/bairro/{id}", getBairroId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void buscaTodasLocalizacoes() throws Exception {
-        mvc.perform(get("/localizacao/localizacoes")
+    public void buscaTodaosBairros() throws Exception {
+        mvc.perform(get("/bairro/bairros")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
     }
-
 }

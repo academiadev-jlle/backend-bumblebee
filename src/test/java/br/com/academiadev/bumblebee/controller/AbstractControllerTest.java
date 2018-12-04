@@ -1,5 +1,6 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Bairro.BairroDTO;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTO;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
@@ -67,13 +68,28 @@ public class AbstractControllerTest {
         return Long.valueOf((Integer) new JSONObject(cidadeRetorno).get("id"));
     }
 
+    protected Long getBairroId() throws Exception {
+
+        BairroDTO bairroDTO = new BairroDTO();
+        bairroDTO.setNome("Comasa");
+
+        String bairroRetorno = mvc.perform(post("/bairro/cidade/{cidade}", getCidadeId())
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(bairroDTO)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        return Long.valueOf((Integer) new JSONObject(bairroRetorno).get("id"));
+    }
+
     protected Long getLocalizacaoId() throws Exception {
         LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
-        localizacaoDTO.setBairro("Ubatuba");
         localizacaoDTO.setLogradouro("Capinzal");
         localizacaoDTO.setReferencia("Casa com muro branco");
 
-        String localizacaoRetorno = mvc.perform(post("/localizacao/cidade/{cidade}", getCidadeId())
+        String localizacaoRetorno = mvc.perform(post("/localizacao/cidade/{cidade}/bairro/{bairro}", getCidadeId(), getBairroId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(convertObjectToJsonBytes(localizacaoDTO)))
