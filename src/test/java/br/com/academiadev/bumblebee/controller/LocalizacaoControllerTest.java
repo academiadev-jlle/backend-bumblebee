@@ -29,7 +29,7 @@ public class LocalizacaoControllerTest extends AbstractControllerTest {
     @Test
     public void postLocalizacao() throws Exception {
 
-        mvc.perform(get("/localizacao/{id}", getLocalizacaoId())
+        mvc.perform(get("/localizacao/{id}", getLocalizacao().getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.logradouro", is("Capinzal")))
                 .andExpect(jsonPath("$.bairro.nome", is("Comasa")))
@@ -43,7 +43,7 @@ public class LocalizacaoControllerTest extends AbstractControllerTest {
     @Test
     public void deleteLocalizacaoPorId() throws Exception {
 
-        mvc.perform(delete("/localizacao/{id}", getLocalizacaoId())
+        mvc.perform(delete("/localizacao/{id}", getLocalizacao().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());

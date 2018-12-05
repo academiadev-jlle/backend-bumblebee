@@ -5,6 +5,7 @@ import br.com.academiadev.bumblebee.dto.Bairro.BairroDTOResponse;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTO;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
+import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
@@ -181,6 +182,39 @@ public class AbstractControllerTest {
                 .getContentAsString();
 
         return Long.valueOf((Integer) new JSONObject(localizacaoRetorno).get("id"));
+
+    }
+
+    protected LocalizacaoDTOResponse getLocalizacao() throws Exception {
+
+        CidadeDTOResponse cidadeDTOResponse = getCidade();
+        BairroDTOResponse bairroDTOResponse = getBairro();
+
+        LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
+        localizacaoDTO.setLogradouro("Capinzal");
+        localizacaoDTO.setReferencia("Casa com muro branco");
+        localizacaoDTO.setBairro(bairroDTOResponse);
+        localizacaoDTO.setCidade(cidadeDTOResponse);
+
+        String localizacaoRetorno = mvc.perform(post("/localizacao/")
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(localizacaoDTO)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(localizacaoRetorno);
+
+
+        LocalizacaoDTOResponse localizacaoDTOResponse = new LocalizacaoDTOResponse();
+        localizacaoDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
+        localizacaoDTOResponse.setLogradouro((String) json.get("logradouro"));
+        localizacaoDTOResponse.setReferencia((String) json.get("referencia"));
+        localizacaoDTOResponse.setCidade(cidadeDTOResponse);
+        localizacaoDTOResponse.setBairro(bairroDTOResponse);
+
+        return localizacaoDTOResponse;
 
     }
 

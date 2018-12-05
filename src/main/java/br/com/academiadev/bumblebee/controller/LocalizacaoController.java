@@ -2,11 +2,8 @@ package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
-import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOUpdate;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
-import br.com.academiadev.bumblebee.model.Bairro;
-import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.service.BairroService;
 import br.com.academiadev.bumblebee.service.CidadeService;
@@ -53,18 +50,11 @@ public class LocalizacaoController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Localização criada com sucesso")
     })
-    @PostMapping("/cidade/{cidade}/bairro/{bairro}")
-    public LocalizacaoDTOResponse criar(@RequestBody @Valid LocalizacaoDTO localizacaoDTO,
-                                        @PathVariable(value = "cidade") Long idCidade,
-                                        @PathVariable(value = "bairro") Long idBairro) {
+    @PostMapping("/")
+    public LocalizacaoDTOResponse criar(@RequestBody @Valid LocalizacaoDTO localizacaoDTO) {
         Localizacao localizacao = localizacaoMapper.toEntity(localizacaoDTO);
-        Cidade cidade = cidadeService.findById(idCidade).orElseThrow(() -> new ObjectNotFoundException("Cidade não encontrada"));
-        Bairro bairro = bairroService.findById(idBairro).orElseThrow(() -> new ObjectNotFoundException("Bairro não encontrado"));
-        localizacao.setCidade(cidade);
-        localizacao.setBairro(bairro);
         localizacaoService.save(localizacao);
-        LocalizacaoDTOResponse localizacaoDTOResponse = localizacaoMapper.toDTOResponse(localizacao);
-        return localizacaoDTOResponse;
+        return localizacaoMapper.toDTOResponse(localizacao);
     }
 
     @ApiOperation(value = "Buscar todas as localizações")
@@ -89,18 +79,18 @@ public class LocalizacaoController {
         localizacaoService.save(localizacao);
     }
 
-    @ApiOperation(value = "Atualiza uma localização")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Localização criada com sucesso")
-    })
-    @PostMapping("atualiza/cidade/{cidade}")
-    public LocalizacaoDTOResponse atualizaLocalizacao(@RequestBody @Valid LocalizacaoDTOUpdate localizacaoDTO,
-                                                      @PathVariable(value = "cidade") Long idCidade) {
-        Localizacao localizacao = localizacaoMapper.toEntityUpdate(localizacaoDTO);
-        Cidade cidade = cidadeService.findById(idCidade).orElseThrow(() -> new ObjectNotFoundException("Cidade não encontrada"));
-        localizacao.setCidade(cidade);
-        localizacaoService.saveAndFlush(localizacao);
-        return localizacaoMapper.toDTOResponse(localizacao);
-    }
+//    @ApiOperation(value = "Atualiza uma localização")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 201, message = "Localização criada com sucesso")
+//    })
+//    @PostMapping("atualiza/cidade/{cidade}")
+//    public LocalizacaoDTOResponse atualizaLocalizacao(@RequestBody @Valid LocalizacaoDTOUpdate localizacaoDTO,
+//                                                      @PathVariable(value = "cidade") Long idCidade) {
+//        Localizacao localizacao = localizacaoMapper.toEntityUpdate(localizacaoDTO);
+//        Cidade cidade = cidadeService.findById(idCidade).orElseThrow(() -> new ObjectNotFoundException("Cidade não encontrada"));
+//        localizacao.setCidade(cidade);
+//        localizacaoService.saveAndFlush(localizacao);
+//        return localizacaoMapper.toDTOResponse(localizacao);
+//    }
 
 }
