@@ -17,8 +17,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.UUID;
@@ -98,21 +98,19 @@ public class UsuarioController{
             @ApiResponse(code = 201, message = "Email de recuperação de senha enviado com sucesso!")
     })
     @PostMapping("/senha/recuperar/{id}")
-    public void enviarEmailRecuperarSenha(@PathVariable Long id) throws UnknownHostException {
+    public void enviarEmailRecuperarSenha(@PathVariable Long id, HttpServletRequest request) throws UnknownHostException {
         Usuario user = usuarioService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
 
         user.setResetToken(UUID.randomUUID().toString());
 
         user = usuarioService.save(user);
 
-        InetAddress ip = InetAddress.getLocalHost();
-        String hostname = ip.getHostAddress();
 
         SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
         passwordResetEmail.setFrom("suporte@bumblebeepets.com");
         passwordResetEmail.setTo(user.getEmail());
         passwordResetEmail.setSubject("Recuperação de senha");
-        passwordResetEmail.setText("Para recuperar sua senha, entre no link a seguir:\n" + hostname
+        passwordResetEmail.setText("Para recuperar sua senha, entre no link a seguir:\n" + request.getRequestURL()
                 + "/senha/recuperar?token=" + user.getResetToken());
 
         emailService.sendEmail(passwordResetEmail);
