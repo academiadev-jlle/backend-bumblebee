@@ -159,14 +159,19 @@ public class PetController{
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Pet criada com sucesso")
     })
-    @PostMapping("/atualizar/usuario/{usuario}")
-    public PetDTOResponse atualizarPet(@RequestBody @Valid PetDTOUpdate petDTO,
-                                       @PathVariable(value = "usuario") Long idUsuario) {
-        Date now = new Date();
-        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
-        Pet pet = petMapper.toEntityUpdate(petDTO, usuario, now);
-        localizacaoService.save(pet.getLocalizacao());
-        petService.save(pet);
+    @PostMapping("/atualizar/{pet}")
+    public PetDTOResponse atualizarPet(@RequestBody @Valid PetDTOUpdate petDTOUpdate,
+                                       @PathVariable(value = "pet") Long idPet) {
+        Pet pet = petService.findById(idPet).orElseThrow(() -> new ObjectNotFoundException("Pet com id " + idPet + " não encontrado"));
+
+        // todo: verificar se está correto
+        Localizacao localizacao = localizacaoService.findById(pet.getLocalizacao().getId()).orElseThrow(() -> new ObjectNotFoundException("Localização não encontrado"));
+        localizacao.setLogradouro(petDTOUpdate.getLocalizacao().getLogradouro());
+        localizacao.setReferencia(petDTOUpdate.getLocalizacao().getReferencia());
+        localizacao = localizacaoService.save(localizacao);
+
+        pet = petService.save(petMapper.toEntity(petDTOUpdate, idPet, pet.getUsuario(), localizacao, pet.getDataPostagem()));
+
         return petMapper.toDTOResponse(pet);
     }
 

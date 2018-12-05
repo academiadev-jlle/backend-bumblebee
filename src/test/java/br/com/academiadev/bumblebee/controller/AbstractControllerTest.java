@@ -119,6 +119,7 @@ public class AbstractControllerTest {
     }
 
     protected Long getPetId() throws Exception {
+
         PetDTO petDTO = new PetDTO();
         petDTO.setCategoria(Categoria.ADOCAO);
         petDTO.setDescricao("Peludo e brincalhão");
@@ -127,7 +128,7 @@ public class AbstractControllerTest {
         petDTO.setPorte(Porte.PEQUENO);
         petDTO.setSexo("macho");
 
-        String petRetorno = mvc.perform(post("/pet/usuario/{usuario}/localizacao/{localizacao}", getUsuarioId(), getLocalizacaoId())
+        String petRetorno = mvc.perform(post("/pet/usuario/{usuario}", getUsuarioId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(convertObjectToJsonBytes(petDTO)))
