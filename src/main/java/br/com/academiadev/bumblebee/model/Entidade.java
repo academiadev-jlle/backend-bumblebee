@@ -2,6 +2,7 @@ package br.com.academiadev.bumblebee.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
