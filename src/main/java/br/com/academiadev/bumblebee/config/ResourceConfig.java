@@ -16,7 +16,6 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**").permitAll()
                 // TODO: retirar as 2 linhas abaixo
-                .antMatchers( HttpMethod.DELETE, "/**" ).permitAll()
                 .antMatchers( HttpMethod.POST, "/**" ).permitAll()
                 .antMatchers( HttpMethod.GET, "/**" ).permitAll()
                 .antMatchers(HttpMethod.GET, "/pet", "/pet/**", "/uf", "/uf/**", "/cidade", "/cidade/**", "/bairro", "/bairro/**", "/foto", "/foto/**", "/localizacao", "/localizacao/**", "/usuario/senha/**").permitAll()

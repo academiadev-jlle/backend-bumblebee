@@ -6,11 +6,14 @@ import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
-import br.com.academiadev.bumblebee.mapper.FotoMapper;
 import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
 import br.com.academiadev.bumblebee.mapper.PetMapper;
-import br.com.academiadev.bumblebee.model.*;
-import br.com.academiadev.bumblebee.service.*;
+import br.com.academiadev.bumblebee.model.Localizacao;
+import br.com.academiadev.bumblebee.model.Pet;
+import br.com.academiadev.bumblebee.model.Usuario;
+import br.com.academiadev.bumblebee.service.LocalizacaoService;
+import br.com.academiadev.bumblebee.service.PetService;
+import br.com.academiadev.bumblebee.service.UsuarioService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -42,20 +45,6 @@ public class PetController{
     @Autowired
     private LocalizacaoMapper localizacaoMapper;
 
-    @Autowired
-    private CidadeService cidadeService;
-
-    @Autowired
-    private BairroService bairroService;
-
-    @Autowired
-    private UfService ufService;
-
-    @Autowired
-    private FotoService fotoService;
-
-    private FotoMapper fotoMapper;
-
     @ApiOperation(value = "Retorna um pet")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Pet encontrado com sucesso")
@@ -77,10 +66,8 @@ public class PetController{
 //                                @RequestParam("files") MultipartFile[] files) throws IOException {
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
         LocalizacaoDTO localizacaoDTO = petDTO.getLocalizacao();
-        Bairro bairro = bairroService.findById(localizacaoDTO.getBairro().getId()).orElseThrow(() -> new ObjectNotFoundException("Bairro não encontrado"));
-        Cidade cidade = cidadeService.findById(localizacaoDTO.getCidade().getId()).orElseThrow(() -> new ObjectNotFoundException("Bairro não encontrado"));
 
-        Localizacao localizacao = localizacaoService.save(localizacaoMapper.toEntity(localizacaoDTO, bairro, cidade));
+        Localizacao localizacao = localizacaoService.save(localizacaoMapper.toEntity(localizacaoDTO));
         Date now = new Date();
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);

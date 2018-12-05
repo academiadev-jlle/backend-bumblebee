@@ -1,6 +1,6 @@
-
-// todo: arrumar testes
-
+//
+//// todo: arrumar testes
+//
 //package br.com.academiadev.bumblebee.controller;
 //
 //import org.junit.Test;
@@ -32,7 +32,7 @@
 //    @Test
 //    public void postPet() throws Exception {
 //
-//        mvc.perform(get("/pet/{id}", getPetId())
+//        mvc.perform(get("/pet/{id}", getPet().getId())
 //                .header("Authorization", "Bearer " + getToken())
 //                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 //                .andExpect(jsonPath("$.nome", is("Totó")))
@@ -42,34 +42,32 @@
 //    }
 //
 //
-//    @Test
-//    public void deletePetPorId() throws Exception {
-//        mvc.perform(delete("/pet/{id}", getPetId())
-//                .header("Authorization", "Bearer " + getToken())
-//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andExpect(status().isOk());
-//    }
+////    @Test
+////    public void deletePetPorId() throws Exception {
+////        mvc.perform(delete("/pet/{id}",getPet().getId())
+////                .header("Authorization", "Bearer " + getToken())
+////                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+////                .andExpect(status().isOk());
+////    }
 //
 //    @Test
 //    public void buscarPorCategoria() throws Exception {
-//        getPetId();
 //        mvc.perform(get("/pet/categoria/ADOCAO")
 //                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 //                .andExpect(jsonPath("$[0].categoria", is("ADOCAO")))
 //                .andExpect(status().isOk());
 //    }
 //
-//    @Test
-//    public void buscarPorUsuario() throws Exception {
-//        mvc.perform(get("/pet/usuario/{usuario}", getPetUsuarioId())
-//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andExpect(jsonPath("$[0].usuario.nome", is("José da Silva")))
-//                .andExpect(status().isOk());
-//    }
+////    @Test
+////    public void buscarPorUsuario() throws Exception {
+////        mvc.perform(get("/pet/usuario/{usuario}", getPet().getUsuario().getId())
+////                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+////                .andExpect(jsonPath("$[0].usuario.nome", is("José da Silva")))
+////                .andExpect(status().isOk());
+////    }
 //
 //    @Test
 //    public void buscaTodosPets() throws Exception {
-//        getPetId();
 //        mvc.perform(get("/pet/pets")
 //                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 //                .andExpect(status().isOk());
