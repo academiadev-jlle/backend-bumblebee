@@ -35,7 +35,7 @@ public class BairroControllerTest extends AbstractControllerTest {
 
     @Test
     public void postBairro() throws Exception {
-        mvc.perform(get("/bairro/{id}", getBairroId())
+        mvc.perform(get("/bairro/{id}", getBairro().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.nome", is("Comasa")));
@@ -44,7 +44,7 @@ public class BairroControllerTest extends AbstractControllerTest {
     @Test
     public void deleteBairroPorId() throws Exception {
 
-        mvc.perform(delete("/bairro/{id}", getBairroId())
+        mvc.perform(delete("/bairro/{id}", getBairro().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());

@@ -5,9 +5,7 @@ import br.com.academiadev.bumblebee.dto.Bairro.BairroDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.BairroMapper;
 import br.com.academiadev.bumblebee.model.Bairro;
-import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.service.BairroService;
-import br.com.academiadev.bumblebee.service.CidadeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -29,8 +27,6 @@ public class BairroController {
     @Autowired
     private BairroMapper bairroMapper;
 
-    @Autowired
-    private CidadeService cidadeService;
 
     @ApiOperation(value = "Retorna um bairro")
     @ApiResponses(value = {
@@ -47,12 +43,9 @@ public class BairroController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Bairro criado com sucesso")
     })
-    @PostMapping("/cidade/{cidade}")
-    public BairroDTOResponse criar(@RequestBody @Valid BairroDTO bairroDTO,
-                                   @PathVariable(value = "cidade") Long idCidade) {
-        Cidade cidade = cidadeService.findById(idCidade)
-                .orElseThrow(() -> new ObjectNotFoundException("Cidade com id " + idCidade + " não encontrado"));
-        Bairro bairro = bairroMapper.toEntity(bairroDTO, cidade);
+    @PostMapping("/")
+    public BairroDTOResponse criar(@RequestBody @Valid BairroDTO bairroDTO) {
+        Bairro bairro = bairroMapper.toEntity(bairroDTO);
         bairroService.save(bairro);
         return bairroMapper.toDTOResponse(bairro);
     }
