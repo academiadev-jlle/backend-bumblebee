@@ -5,6 +5,8 @@ import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UsuarioService extends ServiceAbstrataImpl<UsuarioRepository, Usuario, Long> {
 
@@ -17,6 +19,9 @@ public class UsuarioService extends ServiceAbstrataImpl<UsuarioRepository, Usuar
         return getRepository().findByEmail(email);
     }
 
+    public Optional<Usuario> findUserByResetToken(String resetToken) {
+        return repository.findByResetToken(resetToken);
+    }
 
 }
 

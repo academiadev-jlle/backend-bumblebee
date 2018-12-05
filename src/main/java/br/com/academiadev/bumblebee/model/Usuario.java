@@ -12,7 +12,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -46,6 +48,10 @@ public class Usuario extends EntidadeAuditavel<Long> implements UserDetails {
 //    @Size(min = 6, max = 16)
     @ApiModelProperty(example = "123456", name = "Senha")
     private String senha;
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
 
     public Usuario(Long id) {
         this.id = id;

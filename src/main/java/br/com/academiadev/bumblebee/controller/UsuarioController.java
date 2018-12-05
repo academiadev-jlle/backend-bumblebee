@@ -2,20 +2,26 @@ package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOSenha;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Usuario;
-import br.com.academiadev.bumblebee.repository.UsuarioRepository;
+import br.com.academiadev.bumblebee.service.EmailService;
 import br.com.academiadev.bumblebee.service.UsuarioService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuario")
@@ -23,13 +29,13 @@ import java.util.List;
 public class UsuarioController{
 
     @Autowired
-    private UsuarioRepository repository;
-
-    @Autowired
     private UsuarioMapper usuarioMapper;
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private EmailService emailService;
 
     @ApiOperation(value = "Retorna uma usuario")
     @ApiResponses(value = {
@@ -84,8 +90,56 @@ public class UsuarioController{
     public UsuarioDTOResponse updateUsuario(@RequestBody @Valid UsuarioDTOResponse usuarioDTORequest) {
         Usuario usuario = usuarioMapper.toEntityUpdate(usuarioDTORequest);
         usuarioService.saveAndFlush(usuario);
-        UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
-        return usuarioDTOResponse;
+        return usuarioMapper.toDTOResponse(usuario);
+    }
+
+    @ApiOperation(value = "Envio de Email de Recuperação de Senha")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Email de recuperação de senha enviado com sucesso!")
+    })
+    @PostMapping("/senha/recuperar/{id}")
+    public void enviarEmailRecuperarSenha(@PathVariable Long id) throws UnknownHostException {
+        Usuario user = usuarioService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
+
+        user.setResetToken(UUID.randomUUID().toString());
+
+        user = usuarioService.save(user);
+
+        InetAddress ip = InetAddress.getLocalHost();
+        String hostname = ip.getHostAddress();
+
+        SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
+        passwordResetEmail.setFrom("suporte@bumblebeepets.com");
+        passwordResetEmail.setTo(user.getEmail());
+        passwordResetEmail.setSubject("Recuperação de senha");
+        passwordResetEmail.setText("Para recuperar sua senha, entre no link a seguir:\n" + hostname
+                + "/senha/recuperar?token=" + user.getResetToken());
+
+        emailService.sendEmail(passwordResetEmail);
+
+    }
+
+    @ApiOperation(value = "Recuperação de Senha")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Email de recuperação de senha enviado com sucesso!")
+    })
+    @GetMapping("/senha/recuperar")
+    public UsuarioDTOSenha recuperarSenha(@RequestParam("token") String token) {
+        Usuario usuario = usuarioService.findUserByResetToken(token).orElseThrow(() -> new ObjectNotFoundException("Token inválido"));
+        return new UsuarioDTOSenha();
+    }
+
+    @ApiOperation(value = "Recuperação de Senha")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Email de recuperação de senha enviado com sucesso!")
+    })
+    @PostMapping("/senha/recuperar")
+    public void recuperarSenha(@RequestParam("token") String token,
+                               @RequestBody @Valid UsuarioDTOSenha usuarioDTOSenha) {
+        Usuario usuario = usuarioService.findUserByResetToken(token).orElseThrow(() -> new ObjectNotFoundException("Token inválido"));
+        usuario.setSenha(new BCryptPasswordEncoder().encode(usuarioDTOSenha.getSenha()));
+        usuario.setResetToken(null);
+        usuarioService.save(usuario);
     }
 
 }
