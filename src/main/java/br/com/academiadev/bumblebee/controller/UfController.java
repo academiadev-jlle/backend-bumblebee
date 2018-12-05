@@ -2,17 +2,10 @@ package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
-import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
-import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UfMapper;
-import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Uf;
-import br.com.academiadev.bumblebee.model.Usuario;
-import br.com.academiadev.bumblebee.repository.UfRepository;
-import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 import br.com.academiadev.bumblebee.service.UfService;
-import br.com.academiadev.bumblebee.service.UsuarioService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -26,11 +19,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/uf")
-@Api(description = "Uf's")
-public class UfController{
-
-    @Autowired
-    private UfRepository repository;
+@Api(description = "UFs")
+public class UfController {
 
     @Autowired
     private UfMapper ufMapper;
@@ -44,10 +34,9 @@ public class UfController{
     })
     @GetMapping("/{id}")
     public UfDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
-        Uf uf =  ufService.findById(id)
+        Uf uf = ufService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Uf com id " + id + " não encontrado"));
-        UfDTOResponse ufDTOResponse = ufMapper.toDTOResponse(uf);
-        return ufDTOResponse;
+        return ufMapper.toDTOResponse(uf);
     }
 
     @ApiOperation(value = "Cria um Uf")
@@ -58,8 +47,7 @@ public class UfController{
     public UfDTOResponse criar(@RequestBody @Valid UfDTO ufDTO) {
         Uf uf = ufMapper.toEntity(ufDTO);
         ufService.save(uf);
-        UfDTOResponse ufDTOResponse = ufMapper.toDTOResponse(uf);
-        return ufDTOResponse;
+        return ufMapper.toDTOResponse(uf);
     }
 
     @ApiOperation(value = "Buscar todas as Ufs")

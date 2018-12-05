@@ -2,9 +2,11 @@ package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.dto.Bairro.BairroDTO;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTO;
+import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
+import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.enums.Especie;
@@ -52,6 +54,32 @@ public class AbstractControllerTest {
         return Long.valueOf((Integer) new JSONObject(uf).get("id"));
     }
 
+
+    protected UfDTOResponse getUf() throws Exception {
+        UfDTO ufDTO = new UfDTO();
+        ufDTO.setNome("Santa Catarina");
+        ufDTO.setUf("SC");
+
+        String uf = mvc.perform(post("/uf")
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(ufDTO)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        JSONObject json = new JSONObject(uf);
+        UfDTOResponse ufDTOResponse = new UfDTOResponse();
+        ufDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
+        ufDTOResponse.setNome((String) json.get("nome"));
+        ufDTOResponse.setUf((String) json.get("uf"));
+
+
+        return ufDTOResponse;
+    }
+
+
     protected Long getCidadeId() throws Exception {
 
         CidadeDTO cidadeDTO = new CidadeDTO();
@@ -66,6 +94,32 @@ public class AbstractControllerTest {
                 .getContentAsString();
 
         return Long.valueOf((Integer) new JSONObject(cidadeRetorno).get("id"));
+    }
+
+    protected CidadeDTOResponse getCidade() throws Exception {
+
+        UfDTOResponse uf = getUf();
+
+        CidadeDTO cidadeDTO = new CidadeDTO();
+        cidadeDTO.setNome("Joinville");
+        cidadeDTO.setUf(uf);
+
+        String cidadeRetorno = mvc.perform(post("/cidade/")
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(cidadeDTO)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(cidadeRetorno);
+
+        CidadeDTOResponse cidadeDTOResponse = new CidadeDTOResponse();
+        cidadeDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
+        cidadeDTOResponse.setNome((String) json.get("nome"));
+        cidadeDTOResponse.setUf(uf);
+
+        return cidadeDTOResponse;
     }
 
     protected Long getBairroId() throws Exception {

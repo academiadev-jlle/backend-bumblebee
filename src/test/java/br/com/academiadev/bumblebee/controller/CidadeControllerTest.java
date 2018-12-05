@@ -35,7 +35,7 @@ public class CidadeControllerTest extends AbstractControllerTest {
 
     @Test
     public void postCidade() throws Exception {
-        mvc.perform(get("/cidade/{id}", getCidadeId())
+        mvc.perform(get("/cidade/{id}", getCidade().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.nome", is("Joinville")))
@@ -45,7 +45,7 @@ public class CidadeControllerTest extends AbstractControllerTest {
     @Test
     public void deleteCidadePorId() throws Exception {
 
-        mvc.perform(delete("/cidade/{id}", getCidadeId())
+        mvc.perform(delete("/cidade/{id}", getCidade().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());

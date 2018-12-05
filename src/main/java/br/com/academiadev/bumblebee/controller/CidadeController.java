@@ -5,7 +5,6 @@ import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.CidadeMapper;
 import br.com.academiadev.bumblebee.model.Cidade;
-import br.com.academiadev.bumblebee.model.Uf;
 import br.com.academiadev.bumblebee.service.CidadeService;
 import br.com.academiadev.bumblebee.service.UfService;
 import io.swagger.annotations.Api;
@@ -47,11 +46,9 @@ public class CidadeController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Cidade criada com sucesso")
     })
-    @PostMapping("/{uf}")
-    public CidadeDTOResponse criar(@RequestBody @Valid CidadeDTO cidadeDTO, @PathVariable(value = "uf") Long idUf) {
-        Uf uf = ufService.findById(idUf).orElseThrow(() -> new ObjectNotFoundException("Uf não encontrada"));
+    @PostMapping("/")
+    public CidadeDTOResponse criar(@RequestBody @Valid CidadeDTO cidadeDTO) {
         Cidade cidade = cidadeMapper.toEntity(cidadeDTO);
-        cidade.setUf(uf);
         cidadeService.save(cidade);
         return cidadeMapper.toDTOResponse(cidade);
     }

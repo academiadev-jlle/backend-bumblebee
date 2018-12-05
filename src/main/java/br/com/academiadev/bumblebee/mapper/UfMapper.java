@@ -4,10 +4,7 @@ import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
 import br.com.academiadev.bumblebee.model.Uf;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
-import javax.persistence.OneToOne;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
