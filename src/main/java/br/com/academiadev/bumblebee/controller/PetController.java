@@ -11,6 +11,7 @@ import br.com.academiadev.bumblebee.mapper.PetMapper;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
+import br.com.academiadev.bumblebee.repository.PetRepository;
 import br.com.academiadev.bumblebee.service.LocalizacaoService;
 import br.com.academiadev.bumblebee.service.PetService;
 import br.com.academiadev.bumblebee.service.UsuarioService;
@@ -19,11 +20,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pet")
@@ -44,6 +50,9 @@ public class PetController{
 
     @Autowired
     private LocalizacaoMapper localizacaoMapper;
+
+    @Autowired
+    private PetRepository petRepository;
 
     @ApiOperation(value = "Retorna um pet")
     @ApiResponses(value = {
@@ -105,9 +114,14 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/pets")
-    public List<PetDTOResponse> buscarTodos() {
-        List<Pet> listaPets = petService.findAll();
-        return petMapper.toDTOResponse(listaPets);
+    public PageImpl<PetDTOResponse> buscarTodos(@RequestParam(defaultValue = "0") int paginaAtual,
+                                                @RequestParam(defaultValue = "10") int tamanho,
+                                                @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
+                                                @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+        PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
+        Page<Pet> listaPets = petRepository.findAll(paginacao);
+        int totalDeElementos = (int) listaPets.getTotalElements();
+        return new PageImpl<PetDTOResponse>(listaPets.stream().map(pet -> petMapper.toDTOResponse(pet)).collect(Collectors.toList()),paginacao,totalDeElementos);
     }
 
     @ApiOperation(value = "Deleta um pet")
@@ -127,9 +141,16 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/categoria/{descricao}")
-    public List<PetDTOResponse> buscarPorCategoria(@PathVariable(value = "descricao") Categoria categoria) {
-        List<Pet> pets = petService.findAllByCategoria(categoria);
-        return petMapper.toDTOResponse(pets);
+    public PageImpl<PetDTOResponse> buscarPorCategoria(@PathVariable(value = "descricao") Categoria categoria,
+                                                   @RequestParam(defaultValue = "0") int paginaAtual,
+                                                   @RequestParam(defaultValue = "10") int tamanho,
+                                                   @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
+                                                   @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+        PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
+        Page<Pet> listaPets = petRepository.findAllByCategoria(categoria, paginacao);
+        int totalDeElementos = (int) listaPets.getTotalElements();
+        return new PageImpl<PetDTOResponse>(listaPets.stream().map(pet -> petMapper.toDTOResponse(pet)).collect(Collectors.toList()),paginacao,totalDeElementos);
+
     }
 
     @ApiOperation(value = "Retorna pets filtradas por usuário")
@@ -137,9 +158,17 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/usuario/{usuario}")
-    public List<PetDTOResponse> buscarPorUsuario(@PathVariable(value = "usuario") Usuario usuario) {
-        List<Pet> pets = petService.findAllByUsuario(usuario);
-        return petMapper.toDTOResponse(pets);
+    public PageImpl<PetDTOResponse> buscarPorUsuario(@PathVariable(value = "usuario") Long idUsuario,
+                                                 @RequestParam(defaultValue = "0") int paginaAtual,
+                                                 @RequestParam(defaultValue = "10") int tamanho,
+                                                 @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
+                                                 @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + idUsuario + " não encontrado"));
+        PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
+        Page<Pet> listaPets = petRepository.findAllByUsuario(usuario, paginacao);
+        int totalDeElementos = (int) listaPets.getTotalElements();
+        return new PageImpl<PetDTOResponse>(listaPets.stream().map(pet -> petMapper.toDTOResponse(pet)).collect(Collectors.toList()),paginacao,totalDeElementos);
+
     }
 
     @ApiOperation(value = "Atualiza um pet")
