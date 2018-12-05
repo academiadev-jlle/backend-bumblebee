@@ -100,5 +100,15 @@ public class ComentarioController {
         return comentarioMapper.toDTOResponse(comentario);
     }
 
+    @ApiOperation(value = "Retorna um comentário")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Comentário encontrado com sucesso")
+    })
+    @GetMapping("/{id}")
+    public ComentarioDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+        Comentario comentario = comentarioService.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Comentário com id " + id + " não encontrado"));
+        return comentarioMapper.toDTOResponse(comentario);
+    }
 
 }
