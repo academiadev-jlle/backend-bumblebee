@@ -15,11 +15,12 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         http.antMatcher( "/**" )
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**", "/usuario/confirmar").permitAll()
-                // TODO: retirar as 2 linhas abaixo
-                .antMatchers( HttpMethod.POST, "/**" ).permitAll()
-                .antMatchers( HttpMethod.GET, "/**" ).permitAll()
-                .antMatchers( HttpMethod.DELETE, "/**" ).permitAll()
                 .antMatchers(HttpMethod.GET, "/pet", "/pet/**", "/uf", "/uf/**", "/cidade", "/cidade/**", "/bairro", "/bairro/**", "/foto", "/foto/**", "/localizacao", "/localizacao/**", "/usuario/senha/**").permitAll()
+                // TODO: retirar linhas abaixo
+                .antMatchers(HttpMethod.POST, "/uf", "/cidade", "/bairro").permitAll()
+//                .antMatchers( HttpMethod.POST, "/**" ).permitAll()
+//                .antMatchers( HttpMethod.GET, "/**" ).permitAll()
+//                .antMatchers( HttpMethod.DELETE, "/**" ).permitAll()
                 .anyRequest()
                 .authenticated();
     }
