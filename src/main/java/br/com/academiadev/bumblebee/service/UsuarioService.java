@@ -23,5 +23,8 @@ public class UsuarioService extends ServiceAbstrataImpl<UsuarioRepository, Usuar
         return repository.findByResetToken(resetToken);
     }
 
+    public Optional<Usuario> findUserByConfirmToken(String token) {
+        return repository.findByConfirmToken(token);
+    }
 }
 

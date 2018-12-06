@@ -14,7 +14,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.antMatcher( "/**" )
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**", "/usuario/confirmar").permitAll()
                 // TODO: retirar as 2 linhas abaixo
                 .antMatchers( HttpMethod.POST, "/**" ).permitAll()
                 .antMatchers( HttpMethod.GET, "/**" ).permitAll()

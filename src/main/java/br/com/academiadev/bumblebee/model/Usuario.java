@@ -11,6 +11,7 @@ import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 @ApiModel(description = "Usuario")
 @Entity
@@ -31,7 +32,7 @@ import java.util.Collection;
         "UPDATE Usuario " +
                 "SET excluido = true " +
                 "WHERE id = ?")
-@Where(clause="excluido=false")
+@Where(clause = "excluido=false")
 public class Usuario extends EntidadeAuditavel<Long> implements UserDetails {
 
     @NotNull()
@@ -49,9 +50,14 @@ public class Usuario extends EntidadeAuditavel<Long> implements UserDetails {
     @ApiModelProperty(example = "123456", name = "Senha")
     private String senha;
 
+    @NotNull
+    private Boolean enable = false;
+
     @Column(name = "reset_token")
     private String resetToken;
 
+    @Column(name = "confirm_token")
+    private String confirmToken;
 
     public Usuario(Long id) {
         this.id = id;
@@ -67,6 +73,11 @@ public class Usuario extends EntidadeAuditavel<Long> implements UserDetails {
     @ApiModelProperty(hidden = true)
     public String getPassword() {
         return senha;
+    }
+
+    @ApiModelProperty(hidden = true)
+    public void setSenha(String password) {
+        senha = new BCryptPasswordEncoder().encode(password);
     }
 
     @Override
@@ -96,7 +107,7 @@ public class Usuario extends EntidadeAuditavel<Long> implements UserDetails {
     @Override
     @ApiModelProperty(hidden = true)
     public boolean isEnabled() {
-        return true;
+        return enable;
     }
 
 }

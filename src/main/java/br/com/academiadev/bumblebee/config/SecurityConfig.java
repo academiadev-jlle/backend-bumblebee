@@ -1,5 +1,7 @@
 package br.com.academiadev.bumblebee.config;
 
+import br.com.academiadev.bumblebee.model.Usuario;
+import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +12,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-
-import br.com.academiadev.bumblebee.model.Usuario;
-import br.com.academiadev.bumblebee.repository.UsuarioRepository;
 
 @Configuration
 @EnableAuthorizationServer
@@ -26,9 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     protected void configure(AuthenticationManagerBuilder auth, UsuarioRepository repository) throws Exception {
         Usuario usuario = new Usuario();
-        usuario.setSenha( passwordEncoder().encode("adminadmin" ));
+        usuario.setSenha("adminadmin");
         usuario.setEmail( "admin@admin.com" );
         usuario.setNome( "Administrador do sistema" );
+        usuario.setEnable(true);
 
         if (repository.count() == 0)
             repository.saveAndFlush( usuario );

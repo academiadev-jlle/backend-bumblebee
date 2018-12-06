@@ -26,7 +26,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/usuario")
 @Api(description = "Usuarios")
-public class UsuarioController{
+public class UsuarioController {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
@@ -43,7 +43,7 @@ public class UsuarioController{
     })
     @GetMapping("/{id}")
     public UsuarioDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
-        Usuario usuario =  usuarioService.findById(id)
+        Usuario usuario = usuarioService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
         return usuarioMapper.toDTOResponse(usuario);
     }
@@ -53,8 +53,19 @@ public class UsuarioController{
             @ApiResponse(code = 201, message = "Usuário criado com sucesso")
     })
     @PostMapping
-    public UsuarioDTOResponse criar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
+    public UsuarioDTOResponse criar(@RequestBody @Valid UsuarioDTO usuarioDTO, HttpServletRequest request) {
         Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
+
+        usuario.setConfirmToken(UUID.randomUUID().toString());
+
+        SimpleMailMessage confirmEmail = new SimpleMailMessage();
+        confirmEmail.setFrom("bumblebeepets@gmail.com");
+        confirmEmail.setTo(usuario.getEmail());
+        confirmEmail.setSubject("Confirmação de Cadastro");
+        confirmEmail.setText("Seja bem-vindo ao Bumblebee Pets! Para confirmar seu cadastro, acesse o link a seguir:\n"
+                + request.getRequestURL() + "/confirmar?token=" + usuario.getConfirmToken());
+        emailService.sendEmail(confirmEmail);
+
         usuarioService.save(usuario);
         return usuarioMapper.toDTOResponse(usuario);
     }
@@ -126,6 +137,19 @@ public class UsuarioController{
         Usuario usuario = usuarioService.findUserByResetToken(token).orElseThrow(() -> new ObjectNotFoundException("Token inválido"));
         return new UsuarioDTOSenha();
     }
+
+    @ApiOperation(value = "Confirmação de cadastro")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Cadastro confirmado com sucesso!")
+    })
+    @GetMapping("/confirmar")
+    public void confirmarCadastro(@RequestParam("token") String token) {
+        Usuario usuario = usuarioService.findUserByConfirmToken(token).orElseThrow(() -> new ObjectNotFoundException("Token inválido"));
+        usuario.setEnable(true);
+        usuario.setConfirmToken(null);
+        usuarioService.save(usuario);
+    }
+
 
     @ApiOperation(value = "Recuperação de Senha")
     @ApiResponses(value = {
