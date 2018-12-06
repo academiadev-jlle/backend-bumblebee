@@ -5,6 +5,8 @@ import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
 import br.com.academiadev.bumblebee.enums.Categoria;
+import br.com.academiadev.bumblebee.enums.Especie;
+import br.com.academiadev.bumblebee.enums.Porte;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
 import br.com.academiadev.bumblebee.mapper.PetMapper;
@@ -136,18 +138,21 @@ public class PetController{
         petService.save(pet);
     }
 
-    @ApiOperation(value = "Retorna pets filtrados por categoria")
+    @ApiOperation(value = "Retorna pets filtrados")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
-    @GetMapping("/categoria/{descricao}")
-    public PageImpl<PetDTOResponse> buscarPorCategoria(@PathVariable(value = "descricao") Categoria categoria,
-                                                   @RequestParam(defaultValue = "0") int paginaAtual,
-                                                   @RequestParam(defaultValue = "10") int tamanho,
-                                                   @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
-                                                   @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+    @GetMapping("/filtro")
+    public PageImpl<PetDTOResponse> buscarPorFiltro(
+            @RequestParam() Categoria categoria,
+            @RequestParam() Especie especie,
+            @RequestParam() Porte porte,
+            @RequestParam(defaultValue = "0") int paginaAtual,
+            @RequestParam(defaultValue = "10") int tamanho,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
+            @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
-        Page<Pet> listaPets = petRepository.findAllByCategoria(categoria, paginacao);
+        Page<Pet> listaPets = petRepository.findAllByCategoriaAndEspecieAndPorte(categoria, especie, porte, paginacao);
         int totalDeElementos = (int) listaPets.getTotalElements();
         return new PageImpl<PetDTOResponse>(listaPets.stream().map(pet -> petMapper.toDTOResponse(pet)).collect(Collectors.toList()),paginacao,totalDeElementos);
 

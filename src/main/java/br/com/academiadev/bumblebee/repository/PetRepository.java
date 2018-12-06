@@ -1,6 +1,8 @@
 package br.com.academiadev.bumblebee.repository;
 
 import br.com.academiadev.bumblebee.enums.Categoria;
+import br.com.academiadev.bumblebee.enums.Especie;
+import br.com.academiadev.bumblebee.enums.Porte;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
 
@@ -18,6 +20,8 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
     List<Pet> findAllByCategoria(Categoria categoria);
 
     Page<Pet> findAllByCategoria(Categoria categoria, Pageable pageable);
+
+    Page<Pet> findAllByCategoriaAndEspecieAndPorte(Categoria categoria, Especie especie, Porte porte, Pageable pageable);
 
     List<Pet> findAllByUsuario(Usuario usuario);
 
