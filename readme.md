@@ -8,11 +8,11 @@ As tecnologias utilizadas, a organização do time de desenvolvimento e
 demais informações do projeto podem ser encontradas no 
 [repositório Wiki](https://github.com/academiadev-jlle/wiki-bumblebee/blob/master/home.md).
 
-###Equipe backend
-  * **Bruno Miguel Morais** [Linkedin](https://www.linkedin.com/in/bruno-m-morais/) | [GitHub](https://github.com/viniciusbsi)
-  * **Vinícius de Oliveira** [Linkedin](https://www.linkedin.com/in/vinicius-o-bsi/) | [GitHub](https://github.com/bmorais21)
+### Equipe backend
+  * **Bruno Miguel Morais** [Linkedin](https://www.linkedin.com/in/bruno-m-morais/) | [GitHub](https://github.com/bmorais21)
+  * **Vinícius de Oliveira** [Linkedin](https://www.linkedin.com/in/vinicius-o-bsi/) | [GitHub](https://github.com/viniciusbsi)
 
-###Download do projeto
+### Download do projeto
 Obs: Os comandos utilizados neste tutorial de instalação serão compatíveis com sistemas 
 operacionais Linux. 
 
@@ -23,7 +23,7 @@ Faça o clone do projeto através do link:
 Para executar o projeto, vá ao diretório `/backend/bumblebee` e instale as 
 dependências conforme descrito a seguir:
 
-####Instalação do Gradle
+#### Instalação do Gradle
 É necessário ter instalado o JDK 8 para efetuar a instalação do Gradle. 
 Verifique se o Java está instalado com o comando `java -version`. 
 O retorno deve ser semelhante a "java version "1.8.0_121".
