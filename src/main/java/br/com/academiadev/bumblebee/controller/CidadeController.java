@@ -6,7 +6,6 @@ import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.CidadeMapper;
 import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.service.CidadeService;
-import br.com.academiadev.bumblebee.service.UfService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -27,9 +26,6 @@ public class CidadeController {
 
     @Autowired
     private CidadeService cidadeService;
-
-    @Autowired
-    private UfService ufService;
 
     @ApiOperation(value = "Retorna um cidade")
     @ApiResponses(value = {
