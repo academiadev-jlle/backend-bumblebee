@@ -37,7 +37,7 @@ public class UfControllerTest extends AbstractControllerTest {
     @Test
     public void postUf() throws Exception {
 
-        mvc.perform(get("/uf/{id}", getUfId())
+        mvc.perform(get("/uf/{id}", getUf().getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.nome", is("Santa Catarina")))
                 .andExpect(jsonPath("$.uf", is("SC")));
@@ -46,7 +46,7 @@ public class UfControllerTest extends AbstractControllerTest {
 
     @Test
     public void deleteUfPorId() throws Exception {
-        mvc.perform(delete("/uf/{id}", getUfId())
+        mvc.perform(delete("/uf/{id}", getUf().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());

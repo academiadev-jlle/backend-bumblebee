@@ -61,6 +61,7 @@ public class AbstractControllerTest {
     }
 
 
+    // todo: implementar
     protected Long getComentarioId() throws Exception {
 
         ComentarioDTO comentarioDTO = new ComentarioDTO();
