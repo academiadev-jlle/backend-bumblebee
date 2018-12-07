@@ -1,14 +1,13 @@
 package br.com.academiadev.bumblebee.controller;
 
 
-import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
 import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTOResponse;
-import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
-import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.ComentarioMapper;
-import br.com.academiadev.bumblebee.model.*;
+import br.com.academiadev.bumblebee.model.Comentario;
+import br.com.academiadev.bumblebee.model.Pet;
+import br.com.academiadev.bumblebee.model.Usuario;
 import br.com.academiadev.bumblebee.service.ComentarioService;
 import br.com.academiadev.bumblebee.service.PetService;
 import br.com.academiadev.bumblebee.service.UsuarioService;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/comentario")
 @Api(description = "Comentários")
@@ -48,7 +48,7 @@ public class ComentarioController {
                                        @PathVariable(value = "usuario") Long idUsuario,
                                        @PathVariable(value = "pet") Long idPet) {
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
-        Pet pet  = petService.findById(idPet).orElseThrow(()-> new ObjectNotFoundException("Pet não encontrado"));
+        Pet pet = petService.findById(idPet).orElseThrow(() -> new ObjectNotFoundException("Pet não encontrado"));
         Comentario comentario = comentarioMapper.toEntity(comentarioDTO, pet, usuario);
         comentarioService.save(comentario);
         return comentarioMapper.toDTOResponse(comentario);
@@ -70,7 +70,7 @@ public class ComentarioController {
     })
     @GetMapping("/pet/{pet}")
     public List<ComentarioDTOResponse> buscarPorPet(@PathVariable(value = "pet") Long idPet) {
-        Pet pet  = petService.findById(idPet).orElseThrow(()-> new ObjectNotFoundException("Pet não encontrado"));
+        Pet pet = petService.findById(idPet).orElseThrow(() -> new ObjectNotFoundException("Pet não encontrado"));
         List<Comentario> pets = comentarioService.buscarPorPet(pet, Boolean.FALSE, Boolean.FALSE);
         return comentarioMapper.toDTOResponse(pets);
     }
@@ -81,7 +81,7 @@ public class ComentarioController {
     })
     @PostMapping("/atualizar/{id}")
     public ComentarioDTOResponse updateComentario(@RequestBody @Valid ComentarioDTO comentarioDTO,
-                                                  @PathVariable(value = "id") Long idComentario){
+                                                  @PathVariable(value = "id") Long idComentario) {
         Comentario comentario = comentarioService.findById(idComentario).orElseThrow(() -> new ObjectNotFoundException("Comentário com id " + idComentario + " não encontrado"));
         comentario = comentarioService.save(comentarioMapper.toEntity(comentarioDTO, idComentario, comentario.getUsuario(), comentario.getPet()));
         return comentarioMapper.toDTOResponse(comentario);

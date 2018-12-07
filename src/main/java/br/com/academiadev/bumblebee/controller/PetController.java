@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/pet")
 @Api(description = "Pets")
@@ -164,10 +164,10 @@ public class PetController{
     })
     @GetMapping("/usuario/{usuario}")
     public PageImpl<PetDTOResponse> buscarPorUsuario(@PathVariable(value = "usuario") Long idUsuario,
-                                                 @RequestParam(defaultValue = "0") int paginaAtual,
-                                                 @RequestParam(defaultValue = "10") int tamanho,
-                                                 @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
-                                                 @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+                                                     @RequestParam(defaultValue = "0") int paginaAtual,
+                                                     @RequestParam(defaultValue = "10") int tamanho,
+                                                     @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
+                                                     @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + idUsuario + " não encontrado"));
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
         Page<Pet> listaPets = petRepository.findAllByUsuario(usuario, paginacao);

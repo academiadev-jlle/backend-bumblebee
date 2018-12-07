@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/usuario")
 @Api(description = "Usuarios")
