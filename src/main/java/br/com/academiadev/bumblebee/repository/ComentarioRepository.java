@@ -14,4 +14,8 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
 
     List<Comentario> findAllByPet(Pet pet);
 
+    List<Comentario> findAllByUsuarioExcluidoAndPetExcluido(Boolean valorUsuario, Boolean valorPet);
+
+    List<Comentario> findAllByPetAndUsuarioExcluidoAndPetExcluido(Pet pet, Boolean valorUsuario, Boolean valorPet);
+
 }

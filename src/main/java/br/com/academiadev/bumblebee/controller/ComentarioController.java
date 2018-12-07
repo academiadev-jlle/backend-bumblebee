@@ -60,7 +60,7 @@ public class ComentarioController {
     })
     @GetMapping("/comentarios")
     public List<ComentarioDTOResponse> buscarTodos() {
-        List<Comentario> listaComentaro = comentarioService.findAll();
+        List<Comentario> listaComentaro = comentarioService.buscaTodos(Boolean.FALSE, Boolean.FALSE);
         return comentarioMapper.toDTOResponse(listaComentaro);
     }
 
@@ -71,7 +71,7 @@ public class ComentarioController {
     @GetMapping("/pet/{pet}")
     public List<ComentarioDTOResponse> buscarPorPet(@PathVariable(value = "pet") Long idPet) {
         Pet pet  = petService.findById(idPet).orElseThrow(()-> new ObjectNotFoundException("Pet não encontrado"));
-        List<Comentario> pets = comentarioService.findAllByPet(pet);
+        List<Comentario> pets = comentarioService.buscarPorPet(pet, Boolean.FALSE, Boolean.FALSE);
         return comentarioMapper.toDTOResponse(pets);
     }
 
@@ -105,7 +105,7 @@ public class ComentarioController {
             @ApiResponse(code = 201, message = "Comentário encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public ComentarioDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
+    public ComentarioDTOResponse buscarPorId(@PathVariable Long id) throws ObjectNotFoundException {
         Comentario comentario = comentarioService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Comentário com id " + id + " não encontrado"));
         return comentarioMapper.toDTOResponse(comentario);
