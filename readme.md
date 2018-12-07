@@ -12,9 +12,6 @@ demais informações do projeto podem ser encontradas no
   * **Bruno Miguel Morais** [Linkedin](https://www.linkedin.com/in/bruno-m-morais/) | [GitHub](https://github.com/bmorais21)
   * **Vinícius de Oliveira** [Linkedin](https://www.linkedin.com/in/vinicius-o-bsi/) | [GitHub](https://github.com/viniciusbsi)
 
-### Modelagem do banco de dados
-![modeloBanco](media/modelo-banco.png)
-
 ### Download do projeto
 Obs: Os comandos utilizados neste tutorial de instalação serão compatíveis com sistemas 
 operacionais Linux. 
