@@ -23,6 +23,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers( HttpMethod.DELETE, "/**" ).permitAll()
                 .anyRequest()
                 .authenticated();
+
     }
 
 }
