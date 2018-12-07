@@ -14,10 +14,10 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.antMatcher( "/**" )
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**", "/usuario/confirmar").permitAll()
-                .antMatchers(HttpMethod.GET, "/pet", "/pet/**", "/uf", "/uf/**", "/cidade", "/cidade/**", "/bairro", "/bairro/**", "/foto", "/foto/**", "/localizacao", "/localizacao/**", "/usuario/senha/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/usuario/confirmar", "/pet", "/pet/**", "/uf", "/uf/**", "/cidade", "/cidade/**", "/bairro", "/bairro/**", "/foto", "/foto/**", "/localizacao", "/localizacao/**", "/usuario/senha/**").permitAll()
                 // TODO: retirar linhas abaixo
-                .antMatchers(HttpMethod.POST, "/uf", "/cidade", "/bairro").permitAll()
+//                .antMatchers(HttpMethod.POST, "/uf", "/cidade", "/bairro").permitAll()
 //                .antMatchers( HttpMethod.POST, "/**" ).permitAll()
 //                .antMatchers( HttpMethod.GET, "/**" ).permitAll()
 //                .antMatchers( HttpMethod.DELETE, "/**" ).permitAll()
