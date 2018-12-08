@@ -144,9 +144,9 @@ public class PetController{
     })
     @GetMapping("/filtro")
     public PageImpl<PetDTOResponse> buscarPorFiltro(
-            @RequestParam() Categoria categoria,
-            @RequestParam() Especie especie,
-            @RequestParam() Porte porte,
+            @RequestParam("categoria") Categoria categoria,
+            @RequestParam("especie") Especie especie,
+            @RequestParam("porte") Porte porte,
             @RequestParam(defaultValue = "0") int paginaAtual,
             @RequestParam(defaultValue = "10") int tamanho,
             @RequestParam(defaultValue = "ASC") Sort.Direction direcao,

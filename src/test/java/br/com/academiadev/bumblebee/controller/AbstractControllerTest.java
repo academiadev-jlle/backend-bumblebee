@@ -5,10 +5,23 @@ import br.com.academiadev.bumblebee.dto.Bairro.BairroDTOResponse;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTO;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
+import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTOResponse;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
+import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
+import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
 import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
+import br.com.academiadev.bumblebee.enums.Categoria;
+import br.com.academiadev.bumblebee.enums.Especie;
+import br.com.academiadev.bumblebee.enums.Porte;
+import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
+import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
+import br.com.academiadev.bumblebee.model.Localizacao;
+import br.com.academiadev.bumblebee.model.Usuario;
+import br.com.academiadev.bumblebee.service.UsuarioService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -29,6 +42,15 @@ public class AbstractControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private LocalizacaoMapper localizacaoMapper;
+
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Value("${security.oauth2.client.client-id}")
     private String client;
@@ -60,9 +82,7 @@ public class AbstractControllerTest {
         return ufDTOResponse;
     }
 
-
-    // todo: implementar
-    protected Long getComentarioId() throws Exception {
+    protected ComentarioDTOResponse getComentario() throws Exception {
 
         ComentarioDTO comentarioDTO = new ComentarioDTO();
         comentarioDTO.setDescricao("Comentário do pet");
@@ -75,7 +95,15 @@ public class AbstractControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        return Long.valueOf((Integer) new JSONObject(comentarioRetorno).get("id"));
+        Usuario usuario = usuarioService.findById(getUsuario().getId()).get();
+        UsuarioDTOResponse usuarioDTOResponse = usuarioMapper.toDTOResponse(usuario);
+
+        JSONObject json = new JSONObject(comentarioRetorno);
+        ComentarioDTOResponse comentarioDTOResponse = new ComentarioDTOResponse();
+        comentarioDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
+        comentarioDTOResponse.setDescricao((String) json.get("descricao"));
+        comentarioDTOResponse.setUsuario(usuarioDTOResponse);
+        return comentarioDTOResponse;
     }
 
     protected CidadeDTOResponse getCidade() throws Exception {
@@ -154,7 +182,6 @@ public class AbstractControllerTest {
 
         JSONObject json = new JSONObject(localizacaoRetorno);
 
-
         LocalizacaoDTOResponse localizacaoDTOResponse = new LocalizacaoDTOResponse();
         localizacaoDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
         localizacaoDTOResponse.setLogradouro((String) json.get("logradouro"));
@@ -166,70 +193,80 @@ public class AbstractControllerTest {
 
     }
 
-    // todo: verificar como fazer testes de usuario
-//    protected Long getUsuarioId() throws Exception {
-//        UsuarioDTO usuarioDTO = new UsuarioDTO();
-//        usuarioDTO.setEmail("usuario@teste.com");
-//        usuarioDTO.setNome("José da Silva");
-//        usuarioDTO.setSenha("senha123");
-//
-//        String usuarioRetorno = mvc.perform(post("/usuario")
-//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-//                .content(convertObjectToJsonBytes(usuarioDTO)))
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString();
-//
-//        return Long.valueOf((Integer) new JSONObject(usuarioRetorno).get("id"));
-//    }
+    protected UsuarioDTOResponse getUsuario() throws Exception {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setEmail("usuario@teste.com");
+        usuarioDTO.setNome("José da Silva");
+        usuarioDTO.setSenha("senha123");
+        usuarioDTO.setContato("(47) 99999-9999");
 
-//    protected PetDTOResponse getPet() throws Exception {
-//
-//        LocalizacaoDTOResponse localizacaoDTOResponse = getLocalizacao();
-//
-//        CidadeDTOResponse cidadeDTOResponse = getCidade();
-//        BairroDTOResponse bairroDTOResponse = getBairro();
-//
-//        LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
-//        localizacaoDTO.setLogradouro("Capinzal");
-//        localizacaoDTO.setReferencia("Casa com muro branco");
-//        localizacaoDTO.setBairro(bairroDTOResponse);
-//        localizacaoDTO.setCidade(cidadeDTOResponse);
-//
-//
-//        PetDTO petDTO = new PetDTO();
-//        petDTO.setCategoria(Categoria.ADOCAO);
-//        petDTO.setDescricao("Peludo e brincalhão");
-//        petDTO.setEspecie(Especie.CACHORRO);
-//        petDTO.setNome("Totó");
-//        petDTO.setPorte(Porte.PEQUENO);
-//        petDTO.setSexo("macho");
-//        petDTO.setLocalizacao(localizacaoDTOResponse);
-//
-//        String petRetorno = mvc.perform(post("/pet/")
-//                .header("Authorization", "Bearer " + getToken())
-//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-//                .content(convertObjectToJsonBytes(petDTO)))
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString();
-//
-//        JSONObject json = new JSONObject(petRetorno);
-//
-//
-//        PetDTOResponse petDTOResponse = new PetDTOResponse();
-//        petDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
-//        petDTOResponse.setNome((String) json.get("nome"));
-//        petDTOResponse.setCategoria(petDTO.getCategoria());
-//        petDTOResponse.setDescricao((String) json.get("descricao"));
-//        petDTOResponse.setEspecie(petDTO.getEspecie());
-//        petDTOResponse.setPorte(petDTO.getPorte());
-//        petDTOResponse.setSexo((String) json.get("sexo"));
-//        petDTOResponse.setLocalizacao(localizacaoDTOResponse);
-////        petDTOResponse.setUsuario((UsuarioDTOResponse) json.get("usuario"));
-//
-//        return petDTOResponse;
-//    }
+        String usuarioRetorno = mvc.perform(post("/usuario")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(usuarioDTO)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(usuarioRetorno);
+
+        UsuarioDTOResponse usuarioDTOResponse = new UsuarioDTOResponse();
+        usuarioDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
+        usuarioDTOResponse.setEmail((String) json.get("email"));
+        usuarioDTOResponse.setNome((String) json.get("nome"));
+        usuarioDTOResponse.setContato((String) json.get("contato"));
+
+        return usuarioDTOResponse;
+    }
+
+    protected PetDTOResponse getPet() throws Exception {
+
+        LocalizacaoDTOResponse localizacaoDTOResponse = getLocalizacao();
+
+        CidadeDTOResponse cidadeDTOResponse = getCidade();
+        BairroDTOResponse bairroDTOResponse = getBairro();
+
+        LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
+        localizacaoDTO.setLogradouro("Capinzal");
+        localizacaoDTO.setReferencia("Casa com muro branco");
+        localizacaoDTO.setBairro(bairroDTOResponse);
+        localizacaoDTO.setCidade(cidadeDTOResponse);
+
+
+        PetDTO petDTO = new PetDTO();
+        petDTO.setCategoria(Categoria.ADOCAO);
+        petDTO.setDescricao("Peludo e brincalhão");
+        petDTO.setEspecie(Especie.CACHORRO);
+        petDTO.setNome("Totó");
+        petDTO.setPorte(Porte.PEQUENO);
+        petDTO.setSexo("macho");
+        petDTO.setLocalizacao(localizacaoDTO);
+
+        String petRetorno = mvc.perform(post("/pet/usuario/{usuario}", getUsuario().getId())
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(petDTO)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(petRetorno);
+
+        Localizacao localizacao = localizacaoMapper.toEntity(localizacaoDTO);
+        Usuario usuario = usuarioService.findById(getUsuario().getId()).get();
+
+        PetDTOResponse petDTOResponse = new PetDTOResponse();
+        petDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
+        petDTOResponse.setNome((String) json.get("nome"));
+        petDTOResponse.setCategoria(petDTO.getCategoria());
+        petDTOResponse.setDescricao((String) json.get("descricao"));
+        petDTOResponse.setEspecie(petDTO.getEspecie());
+        petDTOResponse.setPorte(petDTO.getPorte());
+        petDTOResponse.setSexo((String) json.get("sexo"));
+        petDTOResponse.setLocalizacao(localizacao);
+        petDTOResponse.setUsuario(usuario);
+
+        return petDTOResponse;
+    }
 
 
     protected String getToken() throws Exception {
