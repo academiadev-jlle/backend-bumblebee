@@ -87,7 +87,7 @@ public class AbstractControllerTest {
         ComentarioDTO comentarioDTO = new ComentarioDTO();
         comentarioDTO.setDescricao("Comentário do pet");
 
-        String comentarioRetorno = mvc.perform(post("/comentario/{pet}/{usuario}", 1L, 1L)
+        String comentarioRetorno = mvc.perform(post("/comentario/{pet}/{usuario}", getPet().getId(), getUsuario().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(convertObjectToJsonBytes(comentarioDTO)))
