@@ -64,14 +64,15 @@ public class UsuarioController {
 
         usuario.setConfirmToken(UUID.randomUUID().toString());
 
-        SimpleMailMessage confirmEmail = new SimpleMailMessage();
-        confirmEmail.setFrom("bumblebeepets@gmail.com");
-        confirmEmail.setTo(usuario.getEmail());
-        confirmEmail.setSubject("Confirmação de Cadastro");
-        confirmEmail.setText("Seja bem-vindo ao Bumblebee Pets! Para confirmar seu cadastro, acesse o link a seguir:\n"
-                + request.getRequestURL() + "/confirmar?token=" + usuario.getConfirmToken());
-        emailService.sendEmail(confirmEmail);
-
+        // todo: descmonetar e apagar última linha
+//        SimpleMailMessage confirmEmail = new SimpleMailMessage();
+//        confirmEmail.setFrom("bumblebeepets@gmail.com");
+//        confirmEmail.setTo(usuario.getEmail());
+//        confirmEmail.setSubject("Confirmação de Cadastro");
+//        confirmEmail.setText("Seja bem-vindo ao Bumblebee Pets! Para confirmar seu cadastro, acesse o link a seguir:\n"
+//                + request.getRequestURL() + "/confirmar?token=" + usuario.getConfirmToken());
+//        emailService.sendEmail(confirmEmail);
+        usuario.setEnable(true);
 
         usuarioService.save(usuario);
         return usuarioMapper.toDTOResponse(usuario);
