@@ -220,8 +220,6 @@ public class AbstractControllerTest {
 
     protected PetDTOResponse getPet() throws Exception {
 
-        LocalizacaoDTOResponse localizacaoDTOResponse = getLocalizacao();
-
         CidadeDTOResponse cidadeDTOResponse = getCidade();
         BairroDTOResponse bairroDTOResponse = getBairro();
 
