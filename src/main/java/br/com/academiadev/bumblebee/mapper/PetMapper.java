@@ -13,7 +13,7 @@ import org.mapstruct.Mappings;
 import java.util.Date;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {LocalizacaoMapper.class, UsuarioMapper.class})
 public interface PetMapper extends EntityMapper<Pet, PetDTO> {
 //    @Mappings({
 //

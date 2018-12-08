@@ -1,10 +1,7 @@
 package br.com.academiadev.bumblebee.mapper;
 
-import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
 import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTOResponse;
-import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
-import br.com.academiadev.bumblebee.model.Cidade;
 import br.com.academiadev.bumblebee.model.Comentario;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;

@@ -32,10 +32,9 @@ public class LocalizacaoControllerTest extends AbstractControllerTest {
         mvc.perform(get("/localizacao/{id}", getLocalizacao().getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.logradouro", is("Capinzal")))
-                .andExpect(jsonPath("$.bairro.nome", is("Comasa")))
-                .andExpect(jsonPath("$.cidade.nome", is("Joinville")))
-                .andExpect(jsonPath("$.bairro.nome", is("Comasa")))
-                .andExpect(jsonPath("$.cidade.uf.nome", is("Santa Catarina")));
+                .andExpect(jsonPath("$.bairro", is("Floresta")))
+                .andExpect(jsonPath("$.cidade", is("Joinville")))
+                .andExpect(jsonPath("$.uf", is("SC")));
 
     }
 

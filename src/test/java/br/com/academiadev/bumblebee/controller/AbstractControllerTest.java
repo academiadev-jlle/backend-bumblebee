@@ -1,17 +1,11 @@
 package br.com.academiadev.bumblebee.controller;
 
-import br.com.academiadev.bumblebee.dto.Bairro.BairroDTO;
-import br.com.academiadev.bumblebee.dto.Bairro.BairroDTOResponse;
-import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTO;
-import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
 import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTOResponse;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
-import br.com.academiadev.bumblebee.dto.Uf.UfDTO;
-import br.com.academiadev.bumblebee.dto.Uf.UfDTOResponse;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.enums.Categoria;
@@ -59,29 +53,6 @@ public class AbstractControllerTest {
     @Value("${security.oauth2.client.client-secret}")
     private String secret;
 
-    protected UfDTOResponse getUf() throws Exception {
-        UfDTO ufDTO = new UfDTO();
-        ufDTO.setNome("Santa Catarina");
-        ufDTO.setUf("SC");
-
-        String uf = mvc.perform(post("/uf")
-                .header("Authorization", "Bearer " + getToken())
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(convertObjectToJsonBytes(ufDTO)))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-
-        JSONObject json = new JSONObject(uf);
-        UfDTOResponse ufDTOResponse = new UfDTOResponse();
-        ufDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
-        ufDTOResponse.setNome((String) json.get("nome"));
-        ufDTOResponse.setUf((String) json.get("uf"));
-
-
-        return ufDTOResponse;
-    }
 
     protected ComentarioDTOResponse getComentario() throws Exception {
 
@@ -107,71 +78,16 @@ public class AbstractControllerTest {
         return comentarioDTOResponse;
     }
 
-    protected CidadeDTOResponse getCidade() throws Exception {
-
-        UfDTOResponse uf = getUf();
-
-        CidadeDTO cidadeDTO = new CidadeDTO();
-        cidadeDTO.setNome("Joinville");
-        cidadeDTO.setUf(uf);
-
-        String cidadeRetorno = mvc.perform(post("/cidade/")
-                .header("Authorization", "Bearer " + getToken())
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(convertObjectToJsonBytes(cidadeDTO)))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        JSONObject json = new JSONObject(cidadeRetorno);
-
-        CidadeDTOResponse cidadeDTOResponse = new CidadeDTOResponse();
-        cidadeDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
-        cidadeDTOResponse.setNome((String) json.get("nome"));
-        cidadeDTOResponse.setUf(uf);
-
-        return cidadeDTOResponse;
-    }
-
-    protected BairroDTOResponse getBairro() throws Exception {
-
-        CidadeDTOResponse cidadeDTOResponse = getCidade();
-
-        BairroDTO bairroDTO = new BairroDTO();
-        bairroDTO.setNome("Comasa");
-        bairroDTO.setCidade(cidadeDTOResponse);
-
-        String bairroRetorno = mvc.perform(post("/bairro/")
-                .header("Authorization", "Bearer " + getToken())
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(convertObjectToJsonBytes(bairroDTO)))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        JSONObject json = new JSONObject(bairroRetorno);
-
-
-        BairroDTOResponse bairroDTOResponse = new BairroDTOResponse();
-        bairroDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
-        bairroDTOResponse.setNome((String) json.get("nome"));
-        // todo: fazer do jeito certo
-        bairroDTOResponse.setCidade(cidadeDTOResponse);
-
-
-        return bairroDTOResponse;
-    }
-
     protected LocalizacaoDTOResponse getLocalizacao() throws Exception {
 
-        CidadeDTOResponse cidadeDTOResponse = getCidade();
-        BairroDTOResponse bairroDTOResponse = getBairro();
 
         LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
         localizacaoDTO.setLogradouro("Capinzal");
         localizacaoDTO.setReferencia("Casa com muro branco");
-        localizacaoDTO.setBairro(bairroDTOResponse);
-        localizacaoDTO.setCidade(cidadeDTOResponse);
+        localizacaoDTO.setUf("SC");
+        localizacaoDTO.setBairro("Floresta");
+        localizacaoDTO.setCidade("Joinville");
+        localizacaoDTO.setCep("89211-580");
 
         String localizacaoRetorno = mvc.perform(post("/localizacao/")
                 .header("Authorization", "Bearer " + getToken())
@@ -185,10 +101,12 @@ public class AbstractControllerTest {
 
         LocalizacaoDTOResponse localizacaoDTOResponse = new LocalizacaoDTOResponse();
         localizacaoDTOResponse.setId(Long.valueOf((Integer) json.get("id")));
-        localizacaoDTOResponse.setLogradouro((String) json.get("logradouro"));
-        localizacaoDTOResponse.setReferencia((String) json.get("referencia"));
-        localizacaoDTOResponse.setCidade(cidadeDTOResponse);
-        localizacaoDTOResponse.setBairro(bairroDTOResponse);
+        localizacaoDTOResponse.setLogradouro(json.get("logradouro").toString());
+        localizacaoDTOResponse.setReferencia(json.get("referencia").toString());
+        localizacaoDTOResponse.setCidade(json.get("cidade").toString());
+        localizacaoDTOResponse.setBairro(json.get("bairro").toString());
+        localizacaoDTOResponse.setUf(json.get("uf").toString());
+        localizacaoDTOResponse.setCep(json.get("cep").toString());
 
         return localizacaoDTOResponse;
 
@@ -221,15 +139,13 @@ public class AbstractControllerTest {
 
     protected PetDTOResponse getPet() throws Exception {
 
-        CidadeDTOResponse cidadeDTOResponse = getCidade();
-        BairroDTOResponse bairroDTOResponse = getBairro();
-
         LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
         localizacaoDTO.setLogradouro("Capinzal");
         localizacaoDTO.setReferencia("Casa com muro branco");
-        localizacaoDTO.setBairro(bairroDTOResponse);
-        localizacaoDTO.setCidade(cidadeDTOResponse);
-
+        localizacaoDTO.setUf("SC");
+        localizacaoDTO.setBairro("Floresta");
+        localizacaoDTO.setCidade("Joinville");
+        localizacaoDTO.setCep("89211-580");
 
         PetDTO petDTO = new PetDTO();
         petDTO.setCategoria(Categoria.ADOCAO);
@@ -261,8 +177,21 @@ public class AbstractControllerTest {
         petDTOResponse.setEspecie(petDTO.getEspecie());
         petDTOResponse.setPorte(petDTO.getPorte());
         petDTOResponse.setSexo((String) json.get("sexo"));
-        petDTOResponse.setLocalizacao(localizacao);
-        petDTOResponse.setUsuario(usuario);
+
+        LocalizacaoDTOResponse localizacaoDTOResponse = new LocalizacaoDTOResponse();
+
+        JSONObject jsonLocalizacao = new JSONObject(json.get("localizacao").toString());
+
+        localizacaoDTOResponse.setId(Long.valueOf((Integer) jsonLocalizacao.get("id")));
+        localizacaoDTOResponse.setLogradouro((String) jsonLocalizacao.get("logradouro"));
+        localizacaoDTOResponse.setReferencia((String) jsonLocalizacao.get("referencia"));
+        localizacaoDTOResponse.setUf((String) jsonLocalizacao.get("uf"));
+        localizacaoDTOResponse.setBairro((String) jsonLocalizacao.get("bairro"));
+        localizacaoDTOResponse.setCidade(jsonLocalizacao.get("cidade").toString());
+        localizacaoDTOResponse.setCep((String) jsonLocalizacao.get("cep"));
+
+        petDTOResponse.setLocalizacao(localizacaoMapper.toDTOResponse(localizacao));
+        petDTOResponse.setUsuario(usuarioMapper.toDTOResponse(usuario));
 
         return petDTOResponse;
     }

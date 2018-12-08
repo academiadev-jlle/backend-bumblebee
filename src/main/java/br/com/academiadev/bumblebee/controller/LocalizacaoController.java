@@ -5,8 +5,6 @@ import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTOResponse;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
 import br.com.academiadev.bumblebee.model.Localizacao;
-import br.com.academiadev.bumblebee.service.BairroService;
-import br.com.academiadev.bumblebee.service.CidadeService;
 import br.com.academiadev.bumblebee.service.LocalizacaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,12 +27,6 @@ public class LocalizacaoController {
 
     @Autowired
     private LocalizacaoService localizacaoService;
-
-    @Autowired
-    private CidadeService cidadeService;
-
-    @Autowired
-    private BairroService bairroService;
 
     @ApiOperation(value = "Retorna uma localização")
     @ApiResponses(value = {
