@@ -9,10 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/*
- * Precisamos implementar este filtro CORS pois a implementação do
- * Spring não habilitava os endpoints do Oauth
- */
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
