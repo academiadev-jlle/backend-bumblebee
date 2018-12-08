@@ -41,6 +41,7 @@ public class Usuario extends EntidadeAuditavel<Long> implements UserDetails {
     private String nome;
 
     @NotNull
+    @Column(unique = true)
     @Size(min = 3, max = 60)
     @ApiModelProperty(example = "docsbruno@gmail.com", name = "E-mail")
     private String email;

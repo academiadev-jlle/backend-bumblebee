@@ -3,6 +3,7 @@ package br.com.academiadev.bumblebee.controller;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOSenha;
+import br.com.academiadev.bumblebee.exception.ConflictException;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Usuario;
@@ -55,17 +56,22 @@ public class UsuarioController {
     })
     @PostMapping
     public UsuarioDTOResponse criar(@RequestBody @Valid UsuarioDTO usuarioDTO, HttpServletRequest request) {
+        if (usuarioService.findByEmail(usuarioDTO.getEmail()).isPresent()) {
+            throw new ConflictException("E-mail já cadastrado");
+        }
+
         Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
 
         usuario.setConfirmToken(UUID.randomUUID().toString());
 
-//        SimpleMailMessage confirmEmail = new SimpleMailMessage();
-//        confirmEmail.setFrom("bumblebeepets@gmail.com");
-//        confirmEmail.setTo(usuario.getEmail());
-//        confirmEmail.setSubject("Confirmação de Cadastro");
-//        confirmEmail.setText("Seja bem-vindo ao Bumblebee Pets! Para confirmar seu cadastro, acesse o link a seguir:\n"
-//                + request.getRequestURL() + "/confirmar?token=" + usuario.getConfirmToken());
-//        emailService.sendEmail(confirmEmail);
+        SimpleMailMessage confirmEmail = new SimpleMailMessage();
+        confirmEmail.setFrom("bumblebeepets@gmail.com");
+        confirmEmail.setTo(usuario.getEmail());
+        confirmEmail.setSubject("Confirmação de Cadastro");
+        confirmEmail.setText("Seja bem-vindo ao Bumblebee Pets! Para confirmar seu cadastro, acesse o link a seguir:\n"
+                + request.getRequestURL() + "/confirmar?token=" + usuario.getConfirmToken());
+        emailService.sendEmail(confirmEmail);
+
 
         usuarioService.save(usuario);
         return usuarioMapper.toDTOResponse(usuario);
@@ -109,14 +115,13 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Email de recuperação de senha enviado com sucesso!")
     })
-    @PostMapping("/senha/recuperar/{id}")
-    public void enviarEmailRecuperarSenha(@PathVariable Long id, HttpServletRequest request) throws UnknownHostException {
-        Usuario user = usuarioService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + id + " não encontrado"));
+    @PostMapping("/senha/recuperar/{email}")
+    public void enviarEmailRecuperarSenha(@PathVariable String email, HttpServletRequest request) throws UnknownHostException {
+        Usuario user = usuarioService.findByEmail(email).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + email + " não encontrado"));
 
         user.setResetToken(UUID.randomUUID().toString());
 
         user = usuarioService.save(user);
-
 
         SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
         passwordResetEmail.setFrom("suporte@bumblebeepets.com");

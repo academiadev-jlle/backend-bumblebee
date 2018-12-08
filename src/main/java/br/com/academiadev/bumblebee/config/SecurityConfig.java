@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         if (repository.count() == 0)
             repository.saveAndFlush( usuario );
 
-        auth.userDetailsService(repository::findByEmail);
+        auth.userDetailsService(email -> repository.findByEmail(email).orElse(null));
     }
 
     @Override

@@ -15,7 +15,7 @@ public class UsuarioService extends ServiceAbstrataImpl<UsuarioRepository, Usuar
         super(repository);
     }
 
-    public Usuario findByEmail(String email) {
+    public Optional<Usuario> findByEmail(String email) {
         return getRepository().findByEmail(email);
     }
 
