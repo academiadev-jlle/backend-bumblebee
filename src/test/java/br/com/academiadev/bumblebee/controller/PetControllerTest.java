@@ -1,35 +1,23 @@
-
-// todo: arrumar testes
-
 package br.com.academiadev.bumblebee.controller;
 
 import br.com.academiadev.bumblebee.dto.Bairro.BairroDTOResponse;
 import br.com.academiadev.bumblebee.dto.Cidade.CidadeDTOResponse;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
-import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import javax.transaction.Transactional;
-
-import java.io.StringReader;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

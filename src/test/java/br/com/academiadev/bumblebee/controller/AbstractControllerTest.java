@@ -34,6 +34,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
+import java.util.Random;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -195,7 +196,7 @@ public class AbstractControllerTest {
 
     protected UsuarioDTOResponse getUsuario() throws Exception {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
-        usuarioDTO.setEmail("usuario@teste.com");
+        usuarioDTO.setEmail(getRandomEmail());
         usuarioDTO.setNome("José da Silva");
         usuarioDTO.setSenha("senha123");
         usuarioDTO.setContato("(47) 99999-9999");
@@ -283,6 +284,18 @@ public class AbstractControllerTest {
                 .getContentAsString();
 
         return (String) new JSONObject(login).get("access_token");
+    }
+
+    protected String getRandomEmail() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 10) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        return salt.toString() + "@email.com";
+
     }
 
 

@@ -1,10 +1,6 @@
 package br.com.academiadev.bumblebee.controller;
 
-import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
-import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
-import br.com.academiadev.bumblebee.model.Usuario;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,16 +27,16 @@ public class UsuarioControllerTest extends AbstractControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private UsuarioMapper usuarioMapper;
-
     @Test
     public void postUsuario() throws Exception {
-        mvc.perform(get("/usuario/{id}", getUsuario().getId())
+
+        UsuarioDTOResponse usuario = getUsuario();
+
+        mvc.perform(get("/usuario/{id}", usuario.getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.nome", is("José da Silva")))
-                .andExpect(jsonPath("$.email", is("usuario@teste.com")));
+                .andExpect(jsonPath("$.nome", is(usuario.getNome())))
+                .andExpect(jsonPath("$.email", is(usuario.getEmail())));
     }
 
     @Test
