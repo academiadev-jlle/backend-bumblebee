@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Value("${email.enviar}")
+    private String enviaEmail;
 
     @Autowired
     private EmailService emailService;
@@ -64,15 +68,15 @@ public class UsuarioController {
 
         usuario.setConfirmToken(UUID.randomUUID().toString());
 
-        // todo: descmonetar e apagar última linha
-//        SimpleMailMessage confirmEmail = new SimpleMailMessage();
-//        confirmEmail.setFrom("bumblebeepets@gmail.com");
-//        confirmEmail.setTo(usuario.getEmail());
-//        confirmEmail.setSubject("Confirmação de Cadastro");
-//        confirmEmail.setText("Seja bem-vindo ao Bumblebee Pets! Para confirmar seu cadastro, acesse o link a seguir:\n"
-//                + request.getRequestURL() + "/confirmar?token=" + usuario.getConfirmToken());
-//        emailService.sendEmail(confirmEmail);
-        usuario.setEnable(true);
+        if (this.enviaEmail.equals("true")) {
+            SimpleMailMessage confirmEmail = new SimpleMailMessage();
+            confirmEmail.setFrom("bumblebeepets@gmail.com");
+            confirmEmail.setTo(usuario.getEmail());
+            confirmEmail.setSubject("Confirmação de Cadastro");
+            confirmEmail.setText("Seja bem-vindo ao Bumblebee Pets! Para confirmar seu cadastro, acesse o link a seguir:\n"
+                    + request.getRequestURL() + "/confirmar?token=" + usuario.getConfirmToken());
+            emailService.sendEmail(confirmEmail);
+        }
 
         usuarioService.save(usuario);
         return usuarioMapper.toDTOResponse(usuario);
@@ -124,14 +128,16 @@ public class UsuarioController {
 
         user = usuarioService.save(user);
 
-        SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-        passwordResetEmail.setFrom("suporte@bumblebeepets.com");
-        passwordResetEmail.setTo(user.getEmail());
-        passwordResetEmail.setSubject("Recuperação de senha");
-        passwordResetEmail.setText("Para recuperar sua senha, entre no link a seguir:\n" + request.getRequestURL()
-                + "/senha/recuperar?token=" + user.getResetToken());
 
-        emailService.sendEmail(passwordResetEmail);
+        if (enviaEmail.equals("true")) {
+            SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
+            passwordResetEmail.setFrom("suporte@bumblebeepets.com");
+            passwordResetEmail.setTo(user.getEmail());
+            passwordResetEmail.setSubject("Recuperação de senha");
+            passwordResetEmail.setText("Para recuperar sua senha, entre no link a seguir:\n" + request.getRequestURL()
+                    + "/senha/recuperar?token=" + user.getResetToken());
+            emailService.sendEmail(passwordResetEmail);
+        }
 
     }
 
