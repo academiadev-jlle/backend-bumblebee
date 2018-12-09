@@ -21,7 +21,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         http.cors().and().antMatcher("/**")
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/usuario/confirmar", "/pet", "/pet/**", "/uf", "/uf/**", "/cidade", "/cidade/**", "/bairro", "/bairro/**", "/foto", "/foto/**", "/localizacao", "/localizacao/**", "/usuario/senha/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/usuario/confirmar", "/pet", "/pet/**", "/foto", "/foto/**", "/usuario/senha/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
                 // TODO: retirar linhas abaixo
 //                .antMatchers(HttpMethod.POST, "/uf", "/cidade", "/bairro").permitAll()
