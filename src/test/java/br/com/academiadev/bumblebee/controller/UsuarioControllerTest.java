@@ -1,6 +1,9 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,6 +55,32 @@ public class UsuarioControllerTest extends AbstractControllerTest {
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void atualizaUsuario()throws Exception{
+
+        UsuarioDTOResponse usuarioDTOResponse = new UsuarioDTOResponse();
+        usuarioDTOResponse.setId(getUsuario().getId());
+        usuarioDTOResponse.setEmail("meu email editado");
+        usuarioDTOResponse.setNome("José da Silva com nome editado");
+        usuarioDTOResponse.setContato("(47) 99999-9999");
+
+        String retornoUsuario = mvc.perform(post("/usuario/update")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(usuarioDTOResponse)))
+                .andExpect(jsonPath("$.nome", is("José da Silva com nome editado")))
+                .andExpect(jsonPath("$.email", is("meu email editado"))).andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(retornoUsuario);
+
+        mvc.perform(get("/usuario/{id}", json.get("id"))
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.nome", is("José da Silva com nome editado")))
+                .andExpect(jsonPath("$.email", is("meu email editado")));
     }
 
 

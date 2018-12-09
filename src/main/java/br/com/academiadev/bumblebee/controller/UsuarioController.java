@@ -111,7 +111,10 @@ public class UsuarioController {
     })
     @PostMapping("/update")
     public UsuarioDTOResponse updateUsuario(@RequestBody @Valid UsuarioDTOResponse usuarioDTORequest) {
-        Usuario usuario = usuarioMapper.toEntityUpdate(usuarioDTORequest);
+        Usuario usuarioSenha = usuarioService.findById(usuarioDTORequest.getId())
+                .orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + usuarioDTORequest.getId() + " não encontrado"));
+
+        Usuario usuario = usuarioMapper.toEntityUpdate(usuarioDTORequest, usuarioSenha.getSenha());
         usuarioService.saveAndFlush(usuario);
         return usuarioMapper.toDTOResponse(usuario);
     }

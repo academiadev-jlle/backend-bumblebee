@@ -18,7 +18,10 @@ public interface UsuarioMapper extends EntityMapper<Usuario, UsuarioDTO> {
 
     List<UsuarioDTOResponse> toDTOResponse(List<Usuario> entity);
 
-    Usuario toEntityUpdate(UsuarioDTOResponse usuarioDTOResponse);
+    @Mappings({
+            @Mapping(source = "senha", target = "senha"),
+    })
+    Usuario toEntityUpdate(UsuarioDTOResponse usuarioDTOResponse, String senha);
 
     @Override
     Usuario toEntity(UsuarioDTO usuarioDTO);
