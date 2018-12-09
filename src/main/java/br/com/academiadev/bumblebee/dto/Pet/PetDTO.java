@@ -17,5 +17,6 @@ public class PetDTO {
     private Categoria categoria;
     private Porte porte;
     private Especie especie;
+    private Long[] idFotos;
 
 }

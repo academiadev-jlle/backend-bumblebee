@@ -10,10 +10,12 @@ import br.com.academiadev.bumblebee.enums.Porte;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.LocalizacaoMapper;
 import br.com.academiadev.bumblebee.mapper.PetMapper;
+import br.com.academiadev.bumblebee.model.Foto;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
 import br.com.academiadev.bumblebee.repository.PetRepository;
+import br.com.academiadev.bumblebee.service.FotoService;
 import br.com.academiadev.bumblebee.service.LocalizacaoService;
 import br.com.academiadev.bumblebee.service.PetService;
 import br.com.academiadev.bumblebee.service.UsuarioService;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.stream.Collectors;
+
+//import br.com.academiadev.bumblebee.mapper.FotoMapper;
 
 @CrossOrigin
 @RestController
@@ -55,6 +59,12 @@ public class PetController{
 
     @Autowired
     private PetRepository petRepository;
+
+//    @Autowired
+//    private FotoMapper fotoMapper;
+
+    @Autowired
+    private FotoService fotoService;
 
     @ApiOperation(value = "Retorna um pet")
     @ApiResponses(value = {
@@ -82,6 +92,20 @@ public class PetController{
         Date now = new Date();
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
+
+//        FotoDTOResponse fotoDTOResponse = new FotoDTOResponse();
+
+        for (Long id : petDTO.getIdFotos()) {
+            Foto foto = fotoService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Foto não encontrado"));
+            foto.setPet(pet);
+            fotoService.save(foto);
+//            FotoPetDTO fotoPetDTO = fotoMapper.toPetDTO(fotoService.findById(id).orElseThrow(()->new ObjectNotFoundException("Foto não encontrado")));
+//            fotoPetDTO.setPet(pet);
+//            fotoService.save(fotoMapper.toEntity(fotoPetDTO));
+//            List<byte[]> foto = new ArrayList<byte[]>();
+//            foto.add(fotoPetDTO.getFoto());
+        }
+
 
 //        for (MultipartFile file : files) {
 //

@@ -1,12 +1,12 @@
-package br.com.academiadev.bumblebee.dto;
+package br.com.academiadev.bumblebee.dto.Foto;
 
 import br.com.academiadev.bumblebee.model.Pet;
 import lombok.Data;
 
 @Data
-public class FotoDTO {
+public class FotoPetDTO {
 
-    private Pet pet;
     private byte[] foto;
+    private Pet pet;
 
 }
