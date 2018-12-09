@@ -1,8 +1,13 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
+import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
+import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
+import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,18 +68,25 @@ public class PetControllerTest extends AbstractControllerTest {
 
     }
 
-//    @Test
-//    public void buscarPorUsuario() throws Exception {
-//
-//        PetDTOResponse pet = getPet();
-//
-//        mvc.perform(get("/pet/usuario/{usuario}", pet.getUsuario().getId())
-//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andExpect(jsonPath("$.content[0].usuario.nome", is("José da Silva")))
-//                .andExpect(jsonPath("$.content[0].nome", is("Totó")))
-//                .andExpect(status().isOk());
-//
-//    }
+    @Test
+    public void buscarPorUsuario() throws Exception {
+
+        PetDTOResponse pet = getPet();
+
+        String testeBusca = mvc.perform(get("/pet/{id}", pet.getId()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(testeBusca);
+        JSONObject jsonUsuario = new JSONObject(json.get("usuario").toString());
+
+        mvc.perform(get("/pet/usuario/{usuario}", jsonUsuario.get("id"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.content[0].usuario.nome", is("José da Silva")))
+                .andExpect(jsonPath("$.content[0].usuario.id", is(jsonUsuario.get("id"))));
+
+    }
 
     @Test
     public void buscaTodosPets() throws Exception {
@@ -83,6 +94,47 @@ public class PetControllerTest extends AbstractControllerTest {
         mvc.perform(get("/pet/pets")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void atualizaPet()throws Exception{
+
+        LocalizacaoDTO localizacaoDTO = new LocalizacaoDTO();
+        localizacaoDTO.setLogradouro("Capinzal");
+        localizacaoDTO.setReferencia("Localizacao com referencia editada");
+        localizacaoDTO.setUf("SC");
+        localizacaoDTO.setBairro("Floresta");
+        localizacaoDTO.setCidade("Joinville");
+        localizacaoDTO.setCep("89211-580");
+
+        PetDTO petDTO = new PetDTO();
+        petDTO.setCategoria(Categoria.ADOCAO);
+        petDTO.setDescricao("descricao do pet editado");
+        petDTO.setEspecie(Especie.CACHORRO);
+        petDTO.setNome("nome do pet editado");
+        petDTO.setPorte(Porte.PEQUENO);
+        petDTO.setSexo("macho");
+        petDTO.setLocalizacao(localizacaoDTO);
+
+        String retonoPetEdiado = mvc.perform(post("/pet/atualizar/{pet}", getPet().getId())
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(petDTO)))
+                .andExpect(jsonPath("$.descricao", is("descricao do pet editado")))
+                .andExpect(jsonPath("$.localizacao.referencia", is("Localizacao com referencia editada")))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(retonoPetEdiado);
+
+        mvc.perform(get("/pet/{id}", json.get("id"))
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.nome", is("nome do pet editado")))
+                .andExpect(jsonPath("$.descricao", is("descricao do pet editado")))
+                .andExpect(jsonPath("$.usuario.nome", is("José da Silva")))
+                .andExpect(jsonPath("$.localizacao.referencia", is("Localizacao com referencia editada")));
     }
 
 }
