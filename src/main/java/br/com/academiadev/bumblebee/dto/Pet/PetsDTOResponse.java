@@ -8,10 +8,8 @@ import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class PetDTOResponse {
+public class PetsDTOResponse {
 
     private Long id;
     private String nome;
@@ -22,6 +20,6 @@ public class PetDTOResponse {
     private Categoria categoria;
     private Porte porte;
     private Especie especie;
-    private List<FotoDTOResponse> fotos;
+    private FotoDTOResponse foto;
 
 }

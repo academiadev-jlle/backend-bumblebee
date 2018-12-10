@@ -1,9 +1,11 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Foto.FotoDTOResponse;
 import br.com.academiadev.bumblebee.dto.Localizacao.LocalizacaoDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
+import br.com.academiadev.bumblebee.dto.Pet.PetsDTOResponse;
 import br.com.academiadev.bumblebee.enums.Categoria;
 import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
@@ -31,7 +33,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 //import br.com.academiadev.bumblebee.mapper.FotoMapper;
@@ -40,7 +45,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/pet")
 @Api(description = "Pets")
-public class PetController{
+public class PetController {
 
     @Autowired
     private PetMapper petMapper;
@@ -72,9 +77,18 @@ public class PetController{
     })
     @GetMapping("/{id}")
     public PetDTOResponse buscarPor(@PathVariable Long id) throws ObjectNotFoundException {
-        Pet pet =  petService.findById(id)
+        Pet pet = petService.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Pet com id " + id + " não encontrado"));
-        return petMapper.toDTOResponse(pet);
+
+        //TODAS IMGS
+        List<Foto> fotos = fotoService.findFotoByPet(pet);
+        List<FotoDTOResponse> fotoDTOResponse = new ArrayList<>();
+        for (Foto foto : fotos) {
+            FotoDTOResponse fotoDTO = new FotoDTOResponse();
+            fotoDTO.setFoto(Base64.getDecoder().decode(foto.getFoto()));
+            fotoDTOResponse.add(fotoDTO);
+        }
+        return petMapper.toDTOResponse(pet, fotoDTOResponse);
     }
 
     @ApiOperation(value = "Cria um pet")
@@ -82,9 +96,9 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pet criado com sucesso")
     })
     @PostMapping("/usuario/{usuario}")
-    public PetDTOResponse criar(@RequestBody @Valid PetDTO petDTO,
-                                @PathVariable(value = "usuario") Long idUsuario) {
-        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
+    public PetsDTOResponse criar(@RequestBody @Valid PetDTO petDTO,
+                                 @PathVariable(value = "usuario") Long idUsuario) {
+        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
         LocalizacaoDTO localizacaoDTO = petDTO.getLocalizacao();
 
         Localizacao localizacao = localizacaoService.save(localizacaoMapper.toEntity(localizacaoDTO));
@@ -92,8 +106,14 @@ public class PetController{
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
 
+        FotoDTOResponse fotoPetDTO = new FotoDTOResponse();
+        byte[] base;
         // todo: melhorar
         if (petDTO.getIdFotos() != null) {
+            Foto fotoPet = fotoService.findById(petDTO.getIdFotos().get(0)).orElseThrow(() -> new ObjectNotFoundException("Foto não encontrado"));
+            base = Base64.getDecoder().decode(fotoPet.getFoto());
+            fotoPetDTO.setFoto(base);
+
             for (Long id : petDTO.getIdFotos()) {
                 Foto foto = fotoService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Foto não encontrado"));
                 foto.setPet(pet);
@@ -101,7 +121,7 @@ public class PetController{
             }
         }
 
-        return petMapper.toDTOResponse(pet);
+        return petMapper.toDTOPetsResponse(pet, fotoPetDTO);
     }
 
     @ApiOperation(value = "Buscar todos as pets")
@@ -109,14 +129,16 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/pets")
-    public PageImpl<PetDTOResponse> buscarTodos(@RequestParam(defaultValue = "0") int paginaAtual,
-                                                @RequestParam(defaultValue = "10") int tamanho,
-                                                @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
-                                                @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+    public PageImpl<PetsDTOResponse> buscarTodos(@RequestParam(defaultValue = "0") int paginaAtual,
+                                                 @RequestParam(defaultValue = "10") int tamanho,
+                                                 @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
+                                                 @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
         Page<Pet> listaPets = petRepository.findAll(paginacao);
         int totalDeElementos = (int) listaPets.getTotalElements();
-        return new PageImpl<PetDTOResponse>(listaPets.stream().map(pet -> petMapper.toDTOResponse(pet)).collect(Collectors.toList()),paginacao,totalDeElementos);
+        //UMA IMG
+        FotoDTOResponse fotoPetDTO = new FotoDTOResponse();
+        return getPetsDTOResponses(paginacao, listaPets, totalDeElementos, fotoPetDTO);
     }
 
     @ApiOperation(value = "Deleta um pet")
@@ -136,7 +158,7 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/filtro")
-    public PageImpl<PetDTOResponse> buscarPorFiltro(
+    public PageImpl<PetsDTOResponse> buscarPorFiltro(
             @RequestParam("categoria") Categoria categoria,
             @RequestParam("especie") Especie especie,
             @RequestParam("porte") Porte porte,
@@ -147,7 +169,9 @@ public class PetController{
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
         Page<Pet> listaPets = petRepository.findAllByCategoriaAndEspecieAndPorte(categoria, especie, porte, paginacao);
         int totalDeElementos = (int) listaPets.getTotalElements();
-        return new PageImpl<PetDTOResponse>(listaPets.stream().map(pet -> petMapper.toDTOResponse(pet)).collect(Collectors.toList()),paginacao,totalDeElementos);
+        // UMA IMG
+        FotoDTOResponse fotoPetDTO = new FotoDTOResponse();
+        return getPetsDTOResponses(paginacao, listaPets, totalDeElementos, fotoPetDTO);
 
     }
 
@@ -156,16 +180,20 @@ public class PetController{
             @ApiResponse(code = 201, message = "Pets encontrados com sucesso")
     })
     @GetMapping("/usuario/{usuario}")
-    public PageImpl<PetDTOResponse> buscarPorUsuario(@PathVariable(value = "usuario") Long idUsuario,
-                                                     @RequestParam(defaultValue = "0") int paginaAtual,
-                                                     @RequestParam(defaultValue = "10") int tamanho,
-                                                     @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
-                                                     @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+    public PageImpl<PetsDTOResponse> buscarPorUsuario(@PathVariable(value = "usuario") Long idUsuario,
+                                                      @RequestParam(defaultValue = "0") int paginaAtual,
+                                                      @RequestParam(defaultValue = "10") int tamanho,
+                                                      @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
+                                                      @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + idUsuario + " não encontrado"));
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
         Page<Pet> listaPets = petRepository.findAllByUsuario(usuario, paginacao);
         int totalDeElementos = (int) listaPets.getTotalElements();
-        return new PageImpl<PetDTOResponse>(listaPets.stream().map(pet -> petMapper.toDTOResponse(pet)).collect(Collectors.toList()),paginacao,totalDeElementos);
+
+        // UMA IMG
+        FotoDTOResponse fotoPetDTO = new FotoDTOResponse();
+
+        return getPetsDTOResponses(paginacao, listaPets, totalDeElementos, fotoPetDTO);
 
     }
 
@@ -185,7 +213,26 @@ public class PetController{
 
         pet = petService.save(petMapper.toEntity(petDTOUpdate, idPet, pet.getUsuario(), localizacao, pet.getDataPostagem()));
 
-        return petMapper.toDTOResponse(pet);
+        // TODAS IMGS
+        List<Foto> fotos = fotoService.findFotoByPet(pet);
+        List<FotoDTOResponse> fotoDTOResponse = new ArrayList<>();
+        for (Foto foto : fotos) {
+            FotoDTOResponse fotoDTO = new FotoDTOResponse();
+            fotoDTO.setFoto(Base64.getDecoder().decode(foto.getFoto()));
+            fotoDTOResponse.add(fotoDTO);
+        }
+        return petMapper.toDTOResponse(pet, fotoDTOResponse);
+    }
+
+    private PageImpl<PetsDTOResponse> getPetsDTOResponses(PageRequest paginacao, Page<Pet> listaPets, int totalDeElementos, FotoDTOResponse fotoPetDTO) {
+        return new PageImpl<PetsDTOResponse>(listaPets.stream().map(pet -> {
+            List<Foto> fotoPet = fotoService.findFotoByPet(pet);
+            if (!fotoPet.isEmpty()) {
+                byte[] base = Base64.getDecoder().decode(fotoPet.get(0).getFoto());
+                fotoPetDTO.setFoto(base);
+            }
+            return petMapper.toDTOPetsResponse(pet, fotoPetDTO);
+        }).collect(Collectors.toList()), paginacao, totalDeElementos);
     }
 
 }
