@@ -3,7 +3,6 @@ package br.com.academiadev.bumblebee.controller;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Usuario;
-import br.com.academiadev.bumblebee.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +22,17 @@ import javax.transaction.Transactional;
 public class AuthController {
 
     private ConsumerTokenServices tokenServices;
-
-    @Autowired
     private UsuarioMapper usuarioMapper;
 
     @Autowired
-    private UsuarioService usuarioService;
-
-
-    @Autowired
-    public AuthController(ConsumerTokenServices tokenServices) {
+    public AuthController(ConsumerTokenServices tokenServices,
+                          UsuarioMapper usuarioMapper) {
         this.tokenServices = tokenServices;
+        this.usuarioMapper = usuarioMapper;
     }
 
-    @GetMapping("user")
-    public Object usuarioLogado() {
+    @GetMapping("info")
+    public Object infoUsuario() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.getPrincipal() instanceof String) {
@@ -46,7 +41,7 @@ public class AuthController {
 
         Usuario usuario = (Usuario) authentication.getPrincipal();
 
-        return usuarioMapper.toDTO(usuarioService.findByEmail(usuario.getEmail()).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado")));
+        return usuarioMapper.toDTOResponse(usuario);
     }
 
     @GetMapping("logout")
@@ -61,5 +56,4 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ObjectNotFoundException("Nenhum usuário está logado no sistema"));
     }
-
 }
