@@ -1,4 +1,4 @@
-package br.com.academiadev.bumblebee.config;
+package br.com.academiadev.bumblebee.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
