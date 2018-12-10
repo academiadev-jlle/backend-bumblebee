@@ -1,8 +1,10 @@
 package br.com.academiadev.bumblebee.mapper;
 
+import br.com.academiadev.bumblebee.dto.Foto.FotoDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTO;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOResponse;
 import br.com.academiadev.bumblebee.dto.Pet.PetDTOUpdate;
+import br.com.academiadev.bumblebee.dto.Pet.PetsDTOResponse;
 import br.com.academiadev.bumblebee.model.Localizacao;
 import br.com.academiadev.bumblebee.model.Pet;
 import br.com.academiadev.bumblebee.model.Usuario;
@@ -53,7 +55,15 @@ public interface PetMapper extends EntityMapper<Pet, PetDTO> {
     })
     Pet toEntity(PetDTOUpdate petDTOUpdate, Long idPet, Usuario usuario, Localizacao localizacao, Date dataPostagem);
 
-    PetDTOResponse toDTOResponse(Pet entity);
+    @Mappings({
+            @Mapping(source = "foto", target = "foto")
+    })
+    PetsDTOResponse toDTOPetsResponse(Pet entity, FotoDTOResponse foto);
+
+    @Mappings({
+            @Mapping(source = "fotos", target = "fotos")
+    })
+    PetDTOResponse toDTOResponse(Pet entity, List<FotoDTOResponse> fotos);
 
 //    @Mappings({
 //            @Mapping(target = "updatedAt", ignore = true),

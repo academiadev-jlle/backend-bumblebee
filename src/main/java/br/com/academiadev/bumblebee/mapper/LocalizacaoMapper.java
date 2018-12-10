@@ -13,6 +13,7 @@ public interface LocalizacaoMapper extends EntityMapper<Localizacao, Localizacao
     @Override
     LocalizacaoDTO toDTO(Localizacao entity);
 
+    @Override
     Localizacao toEntity(LocalizacaoDTO localizacaoDTO);
 
     LocalizacaoDTOResponse toDTOResponse(Localizacao entity);
