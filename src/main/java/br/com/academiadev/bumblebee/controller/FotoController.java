@@ -27,7 +27,6 @@ import java.util.List;
 @Api(description = "Fotos")
 public class FotoController {
 
-    String UPLOAD_DIR = "D://upload//";
 
     @Autowired
     private FotoService fotoService;
@@ -44,8 +43,6 @@ public class FotoController {
     })
     @PostMapping
     public Long salvaFoto(@RequestParam("file") MultipartFile file) throws IOException {
-
-
         byte[] bytes = Base64.getEncoder().encode(file.getBytes());
         Foto foto = new Foto();
         foto.setFoto(bytes);
@@ -53,7 +50,6 @@ public class FotoController {
 //        FotoDTO fotoDTO = new FotoDTO();
 //        fotoDTO.setFoto(bytes);
 //        Foto foto = fotoMapper.toEntity(fotoDTO);
-//
 //        fotoService.save(foto);
         return foto.getId();
 
@@ -76,20 +72,16 @@ public class FotoController {
     })
     @GetMapping("/pet/{pet}")
     public List<FotoDTOResponse> buscarPorPet(@PathVariable(value = "pet") Long idPet) {
-//    public List<Foto> buscarPorPet(@PathVariable(value = "pet") Long idPet) {
         Pet pet = petService.findById(idPet).orElseThrow(() -> new ObjectNotFoundException("Pet não encontrado"));
         List<Foto> fotos = fotoService.findFotoByPet(pet);
-        List<FotoDTOResponse> fotoss = new ArrayList<>();
+        List<FotoDTOResponse> fotosDTO = new ArrayList<>();
         for (Foto foto : fotos) {
+            FotoDTOResponse fotoDTOResponse = new FotoDTOResponse();
             byte[] base = Base64.getDecoder().decode(foto.getFoto());
-            FotoDTOResponse nfoto = new FotoDTOResponse();
-            nfoto.setFotos(base);
-            fotoss.add(nfoto);
+            fotoDTOResponse.setFoto(base);
+            fotosDTO.add(fotoDTOResponse);
         }
-
-        return fotoss;
-//        return fotoMapper.toDTOResponse(fotos);
-//        return foto;
+        return fotosDTO;
     }
 
 

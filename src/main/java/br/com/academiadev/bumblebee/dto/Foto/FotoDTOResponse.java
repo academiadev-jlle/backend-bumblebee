@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class FotoDTOResponse {
 
-    private byte[] fotos;
+    private byte[] foto;
 
 }

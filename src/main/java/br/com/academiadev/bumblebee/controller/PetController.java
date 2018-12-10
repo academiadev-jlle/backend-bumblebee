@@ -84,7 +84,6 @@ public class PetController{
     @PostMapping("/usuario/{usuario}")
     public PetDTOResponse criar(@RequestBody @Valid PetDTO petDTO,
                                 @PathVariable(value = "usuario") Long idUsuario) {
-//                                @RequestParam("files") MultipartFile[] files) throws IOException {
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(()->new ObjectNotFoundException("Usuário não encontrado"));
         LocalizacaoDTO localizacaoDTO = petDTO.getLocalizacao();
 
@@ -93,44 +92,11 @@ public class PetController{
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
 
-//        FotoDTOResponse fotoDTOResponse = new FotoDTOResponse();
-
         for (Long id : petDTO.getIdFotos()) {
             Foto foto = fotoService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Foto não encontrado"));
             foto.setPet(pet);
             fotoService.save(foto);
-//            FotoPetDTO fotoPetDTO = fotoMapper.toPetDTO(fotoService.findById(id).orElseThrow(()->new ObjectNotFoundException("Foto não encontrado")));
-//            fotoPetDTO.setPet(pet);
-//            fotoService.save(fotoMapper.toEntity(fotoPetDTO));
-//            List<byte[]> foto = new ArrayList<byte[]>();
-//            foto.add(fotoPetDTO.getFoto());
         }
-
-
-//        for (MultipartFile file : files) {
-//
-//            if (file.isEmpty()) {
-//                continue; //next pls
-//            }
-//
-//            byte[] bytes = file.getBytes();
-//            FotoDTO fotoDTO = new FotoDTO();
-//            fotoDTO.setPet(pet);
-//            fotoDTO.setFoto(bytes);
-//            fotoService.save(fotoMapper.toEntity(fotoDTO));
-//
-//        }
-
-
-//        for (FotoPetDTO fotoPetDTO : petDTO.getFotos()) {
-//            FotoDTO fotoDTO = new FotoDTO();
-//            fotoDTO.setFoto(FileCopyUtils.copyToByteArray(fotoPetDTO.getFoto()));
-//            fotoDTO.setPet(pet);
-//            fotoService.save(fotoMapper.toEntity(fotoDTO));
-
-//            foto.setPet(pet);
-//            fotoRepository.saveAndFlush(foto);
-//        }
 
         return petMapper.toDTOResponse(pet);
     }
@@ -209,7 +175,6 @@ public class PetController{
                                        @PathVariable(value = "pet") Long idPet) {
         Pet pet = petService.findById(idPet).orElseThrow(() -> new ObjectNotFoundException("Pet com id " + idPet + " não encontrado"));
 
-        // todo: verificar se está correto
         Localizacao localizacao = localizacaoService.findById(pet.getLocalizacao().getId()).orElseThrow(() -> new ObjectNotFoundException("Localização não encontrado"));
         localizacao.setLogradouro(petDTOUpdate.getLocalizacao().getLogradouro());
         localizacao.setReferencia(petDTOUpdate.getLocalizacao().getReferencia());
