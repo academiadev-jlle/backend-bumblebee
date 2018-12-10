@@ -1,7 +1,5 @@
 package br.com.academiadev.bumblebee.controller;
 
-import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
-import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
 import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -68,6 +66,7 @@ public class UsuarioControllerTest extends AbstractControllerTest {
 
         String retornoUsuario = mvc.perform(post("/usuario/update")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .header("Authorization", "Bearer " + getToken())
                 .content(convertObjectToJsonBytes(usuarioDTOResponse)))
                 .andExpect(jsonPath("$.nome", is("José da Silva com nome editado")))
                 .andExpect(jsonPath("$.email", is("meu email editado"))).andReturn()
