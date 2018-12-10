@@ -68,7 +68,7 @@ public class FotoController {
 
     @ApiOperation(value = "Retorna fotos do pet")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Fotos encontrados com sucesso")
+            @ApiResponse(code = 201, message = "Fotos encontradas com sucesso")
     })
     @GetMapping("/pet/{pet}")
     public List<FotoDTOResponse> buscarPorPet(@PathVariable(value = "pet") Long idPet) {
@@ -82,6 +82,20 @@ public class FotoController {
             fotosDTO.add(fotoDTOResponse);
         }
         return fotosDTO;
+    }
+
+    @ApiOperation(value = "Retorna foto por id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Fotos encontradas com sucesso")
+    })
+    @GetMapping("/{foto}")
+    public FotoDTOResponse buscarPorId(@PathVariable(value = "foto") Long idFoto) {
+        Foto foto = fotoService.findById(idFoto).orElseThrow(() -> new ObjectNotFoundException("Foto não encontrada"));
+        FotoDTOResponse fotoDTOResponse = new FotoDTOResponse();
+        byte[] base = Base64.getDecoder().decode(foto.getFoto());
+        fotoDTOResponse.setFoto(base);
+        return fotoDTOResponse;
+
     }
 
 
