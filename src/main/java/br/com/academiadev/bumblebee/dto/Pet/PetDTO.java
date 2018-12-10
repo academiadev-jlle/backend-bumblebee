@@ -6,6 +6,8 @@ import br.com.academiadev.bumblebee.enums.Especie;
 import br.com.academiadev.bumblebee.enums.Porte;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 public class PetDTO {
@@ -17,6 +19,6 @@ public class PetDTO {
     private Categoria categoria;
     private Porte porte;
     private Especie especie;
-    private Long[] idFotos;
+    private List<Long> idFotos;
 
 }

@@ -92,10 +92,13 @@ public class PetController{
         Pet pet = petMapper.toEntity(petDTO, usuario, localizacao, now);
         petService.save(pet);
 
-        for (Long id : petDTO.getIdFotos()) {
-            Foto foto = fotoService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Foto não encontrado"));
-            foto.setPet(pet);
-            fotoService.save(foto);
+        // todo: melhorar
+        if (petDTO.getIdFotos() != null) {
+            for (Long id : petDTO.getIdFotos()) {
+                Foto foto = fotoService.findById(id).orElseThrow(() -> new ObjectNotFoundException("Foto não encontrado"));
+                foto.setPet(pet);
+                fotoService.save(foto);
+            }
         }
 
         return petMapper.toDTOResponse(pet);
