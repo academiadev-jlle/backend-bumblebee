@@ -148,7 +148,7 @@ public class AbstractControllerTest {
         localizacaoDTO.setCep("89211-580");
 
         PetDTO petDTO = new PetDTO();
-        petDTO.setCategoria(Categoria.ADOCAO);
+        petDTO.setCategoria(Categoria.ACHADOS);
         petDTO.setDescricao("Peludo e brincalhão");
         petDTO.setEspecie(Especie.CACHORRO);
         petDTO.setNome("Totó");
