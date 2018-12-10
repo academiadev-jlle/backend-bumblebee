@@ -1,7 +1,10 @@
 package br.com.academiadev.bumblebee.enums;
 
 public enum Especie {
-    AVE("Ave"), CACHORRO("Cachorro"), GATO("Gato"), PEIXE("Peixe");
+    PASSARO("Pássaro"),
+    CACHORRO("Cachorro"),
+    GATO("Gato"),
+    OUTROS("Outros");
 
     private String descricao;
 
