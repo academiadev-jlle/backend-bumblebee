@@ -1,4 +1,4 @@
-package br.com.academiadev.bumblebee.config;
+package br.com.academiadev.bumblebee.config.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,16 +8,18 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 
 @Configuration
 @EnableResourceServer
-public class ResourceConfig extends ResourceServerConfigurerAdapter {
+public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.antMatcher( "/**" )
-                .authorizeRequests()
-                .antMatchers( HttpMethod.POST, "/usuario" ).permitAll()
-                .antMatchers( HttpMethod.GET, "/pet", "/pet/**", "/uf", "/uf/**", "/cidade", "/cidade/**", "/foto", "/foto/**", "/localizacao", "/localizacao/**" ).permitAll()
+        http
+                .antMatcher("/**").authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/usuario", "/usuario/senha/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/usuario/confirmar", "/pet", "/pet/**", "/foto", "/foto/**", "/usuario/senha/**", "/enum/**", "/localizacao/**", "/comentario/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
                 .anyRequest()
                 .authenticated();
-    }
 
+    }
 }

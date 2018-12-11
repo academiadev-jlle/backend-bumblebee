@@ -12,7 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,12 +29,12 @@ public class LocalizacaoControllerTest extends AbstractControllerTest {
     @Test
     public void postLocalizacao() throws Exception {
 
-        mvc.perform(get("/localizacao/{id}", getLocalizacaoId())
+        mvc.perform(get("/localizacao/{id}", getLocalizacao().getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.logradouro", is("Capinzal")))
-                .andExpect(jsonPath("$.bairro", is("Ubatuba")))
-                .andExpect(jsonPath("$.cidade.nome", is("Joinville")))
-                .andExpect(jsonPath("$.cidade.uf.nome", is("Santa Catarina")));
+                .andExpect(jsonPath("$.bairro", is("Floresta")))
+                .andExpect(jsonPath("$.cidade", is("Joinville")))
+                .andExpect(jsonPath("$.uf", is("SC")));
 
     }
 
@@ -41,7 +42,7 @@ public class LocalizacaoControllerTest extends AbstractControllerTest {
     @Test
     public void deleteLocalizacaoPorId() throws Exception {
 
-        mvc.perform(delete("/localizacao/{id}", getLocalizacaoId())
+        mvc.perform(delete("/localizacao/{id}", getLocalizacao().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());

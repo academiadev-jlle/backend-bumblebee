@@ -1,7 +1,17 @@
 package br.com.academiadev.bumblebee.enums;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@Getter
 public enum Categoria {
-    ADOCAO("Adocao"), PROCURADO("Procurado"), ECONTRADO("Encontrado");
+    ACHADOS("Achados"),
+    DEVOLVIDOS("Devolvidos"),
+    PERDIDOS("Perdidos"),
+    ENCONTRADOS("Encontrados"),
+    ADOCAO("Adoção"),
+    ADOTADOS("Adotados");
 
     private String descricao;
 

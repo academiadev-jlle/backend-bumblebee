@@ -1,5 +1,6 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Comentario.ComentarioDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class CidadeControllerTest extends AbstractControllerTest {
+public class ComentarioControllerTest extends AbstractControllerTest{
 
     @Autowired
     private MockMvc mvc;
@@ -33,28 +34,46 @@ public class CidadeControllerTest extends AbstractControllerTest {
     private String secret;
 
     @Test
-    public void postCidade() throws Exception {
-        mvc.perform(get("/cidade/{id}", getCidadeId())
+    public void postComentario() throws Exception {
+        mvc.perform(get("/comentario/{id}", getComentario().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.nome", is("Joinville")))
-                .andExpect(jsonPath("$.uf.nome", is("Santa Catarina")));
+                .andExpect(jsonPath("$.descricao", is("Comentário do pet")));
     }
 
     @Test
-    public void deleteCidadePorId() throws Exception {
+    public void deletecomentarioPorId() throws Exception {
 
-        mvc.perform(delete("/cidade/{id}", getCidadeId())
+        mvc.perform(delete("/comentario/{id}", getComentario().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void buscaTodasCidades() throws Exception {
-        mvc.perform(get("/cidade/cidades")
+    public void buscaTodosComentarios() throws Exception {
+        mvc.perform(get("/comentario/comentarios")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void buscaComentariosPorPet() throws Exception {
+        mvc.perform(get("/comentario/pet/{pet}", getPet().getId())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void atualizaComentario()throws Exception{
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setDescricao("Comentário do pet editado");
+
+        mvc.perform(post("/comentario/atualizar/{id}", getComentario().getId())
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(convertObjectToJsonBytes(comentarioDTO)))
+                .andExpect(jsonPath("$.descricao", is("Comentário do pet editado")));
     }
 
 }

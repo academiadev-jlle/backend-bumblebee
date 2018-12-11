@@ -1,7 +1,8 @@
 package br.com.academiadev.bumblebee.config;
 
-import br.com.academiadev.financas.dto.ValidationErrorDTO;
+import br.com.academiadev.bumblebee.exception.ConflictException;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
+import br.com.academiadev.financas.dto.ValidationErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,6 +39,13 @@ public class ExceptionAdvice {
                 .status(UNPROCESSABLE_ENTITY.value())
                 .timestamp(System.currentTimeMillis())
                 .erros(fieldErrors).build();
-
     }
+
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public String handleConflictException(ConflictException exception) {
+        return exception.getMessage();
+    }
+
 }

@@ -1,5 +1,7 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +29,19 @@ public class UsuarioControllerTest extends AbstractControllerTest {
 
     @Test
     public void postUsuario() throws Exception {
-        mvc.perform(get("/usuario/{id}", getUsuarioId())
+
+        UsuarioDTOResponse usuario = getUsuario();
+
+        mvc.perform(get("/usuario/{id}", usuario.getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.nome", is("José da Silva")))
-                .andExpect(jsonPath("$.email", is("usuario@teste.com")));
+                .andExpect(jsonPath("$.nome", is(usuario.getNome())))
+                .andExpect(jsonPath("$.email", is(usuario.getEmail())));
     }
 
     @Test
     public void deleteUsuarioPorId() throws Exception {
-        mvc.perform(delete("/usuario/{id}", getUsuarioId())
+        mvc.perform(delete("/usuario/{id}", getUsuario().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
@@ -48,6 +53,33 @@ public class UsuarioControllerTest extends AbstractControllerTest {
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void atualizaUsuario()throws Exception{
+
+        UsuarioDTOResponse usuarioDTOResponse = new UsuarioDTOResponse();
+        usuarioDTOResponse.setId(getUsuario().getId());
+        usuarioDTOResponse.setEmail("meu email editado");
+        usuarioDTOResponse.setNome("José da Silva com nome editado");
+        usuarioDTOResponse.setContato("(47) 99999-9999");
+
+        String retornoUsuario = mvc.perform(post("/usuario/update")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .header("Authorization", "Bearer " + getToken())
+                .content(convertObjectToJsonBytes(usuarioDTOResponse)))
+                .andExpect(jsonPath("$.nome", is("José da Silva com nome editado")))
+                .andExpect(jsonPath("$.email", is("meu email editado"))).andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        JSONObject json = new JSONObject(retornoUsuario);
+
+        mvc.perform(get("/usuario/{id}", json.get("id"))
+                .header("Authorization", "Bearer " + getToken())
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.nome", is("José da Silva com nome editado")))
+                .andExpect(jsonPath("$.email", is("meu email editado")));
     }
 
 
