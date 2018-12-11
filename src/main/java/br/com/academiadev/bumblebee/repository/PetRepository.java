@@ -23,9 +23,8 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     Page<Pet> findAllByCategoria(Categoria categoria, Pageable pageable);
 
-    @Query("select p from Pet p " +
-            "where ((:busca is null or lower(p.nome) like %:busca%)" +
-            "or (:busca is null or lower(p.descricao) like %:busca%))" +
+    @Query("select p from Pet p where" +
+            "(:busca is null or lower(p.descricao) like %:busca%)   " +
             "and (p.categoria = :categoria or :categoria is null)" +
             "and (p.especie = :especie or :especie is null)" +
             "and (p.porte = :porte or :porte is null)" +
