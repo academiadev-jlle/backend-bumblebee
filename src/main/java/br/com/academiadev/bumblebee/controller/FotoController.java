@@ -47,30 +47,7 @@ public class FotoController {
         Foto foto = new Foto();
         foto.setFoto(bytes);
         fotoService.save(foto);
-//        FotoDTO fotoDTO = new FotoDTO();
-//        fotoDTO.setFoto(bytes);
-//        Foto foto = fotoMapper.toEntity(fotoDTO);
-//        fotoService.save(foto);
         return foto.getId();
-
-    }
-
-    @ApiOperation(value = "Salva fotos")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Fotos salvas com sucesso")
-    })
-    @PostMapping("/fotos")
-    public List<Long> salvaFotos(@RequestParam("files") List<MultipartFile> files) throws IOException {
-
-        List<Long> ids = new ArrayList<>();
-        for(MultipartFile file:files) {
-            byte[] bytes = Base64.getEncoder().encode(file.getBytes());
-            Foto foto = new Foto();
-            foto.setFoto(bytes);
-            fotoService.save(foto);
-            ids.add(foto.getId());
-        }
-        return ids;
 
     }
 

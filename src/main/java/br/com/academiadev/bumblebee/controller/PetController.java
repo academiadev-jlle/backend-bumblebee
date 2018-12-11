@@ -30,6 +30,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -95,10 +97,15 @@ public class PetController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Pet criado com sucesso")
     })
-    @PostMapping("/usuario/{usuario}")
-    public PetsDTOResponse criar(@RequestBody @Valid PetDTO petDTO,
-                                 @PathVariable(value = "usuario") Long idUsuario) {
-        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+    @PostMapping
+    public PetsDTOResponse criar(@RequestBody @Valid PetDTO petDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+
+        Usuario usuario = usuarioService.findById(usuarioLogado.getId()).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+
         LocalizacaoDTO localizacaoDTO = petDTO.getLocalizacao();
 
         Localizacao localizacao = localizacaoService.save(localizacaoMapper.toEntity(localizacaoDTO));
