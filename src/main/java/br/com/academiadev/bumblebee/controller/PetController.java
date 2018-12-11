@@ -137,7 +137,7 @@ public class PetController {
     public PageImpl<PetsDTOResponse> buscarTodos(@RequestParam(defaultValue = "0") int paginaAtual,
                                                  @RequestParam(defaultValue = "10") int tamanho,
                                                  @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
-                                                 @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+                                                 @RequestParam(defaultValue = "datapostagem") String campoOrdenacao) {
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
         Page<Pet> listaPets = petRepository.findAll(paginacao);
         int totalDeElementos = (int) listaPets.getTotalElements();
@@ -164,15 +164,17 @@ public class PetController {
     })
     @GetMapping("/filtro")
     public PageImpl<PetsDTOResponse> buscarPorFiltro(
+            @RequestParam(defaultValue = "") String busca,
             @RequestParam("categoria") Categoria categoria,
             @RequestParam("especie") Especie especie,
             @RequestParam("porte") Porte porte,
             @RequestParam(defaultValue = "0") int paginaAtual,
             @RequestParam(defaultValue = "10") int tamanho,
             @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
-            @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+            @RequestParam(defaultValue = "datapostagem") String campoOrdenacao) {
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
-        Page<Pet> listaPets = petRepository.findAllByCategoriaAndEspecieAndPorte(categoria, especie, porte, paginacao);
+
+        Page<Pet> listaPets = petService.findAllByFiltro(categoria.getDescricao(), especie.getDescricao(), porte.getDescricao(), busca, paginacao);
         int totalDeElementos = (int) listaPets.getTotalElements();
         // UMA IMG
         FotoDTOResponse fotoPetDTO = new FotoDTOResponse();
@@ -189,7 +191,7 @@ public class PetController {
                                                       @RequestParam(defaultValue = "0") int paginaAtual,
                                                       @RequestParam(defaultValue = "10") int tamanho,
                                                       @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
-                                                      @RequestParam(defaultValue = "dataPostagem") String campoOrdenacao) {
+                                                      @RequestParam(defaultValue = "datapostagem") String campoOrdenacao) {
         Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário com id " + idUsuario + " não encontrado"));
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
         Page<Pet> listaPets = petRepository.findAllByUsuario(usuario, paginacao);
@@ -216,7 +218,7 @@ public class PetController {
         localizacao.setReferencia(petDTOUpdate.getLocalizacao().getReferencia());
         localizacao = localizacaoService.save(localizacao);
 
-        pet = petService.save(petMapper.toEntity(petDTOUpdate, idPet, pet.getUsuario(), localizacao, pet.getDataPostagem()));
+        pet = petService.save(petMapper.toEntity(petDTOUpdate, idPet, pet.getUsuario(), localizacao, pet.getDatapostagem()));
 
         // TODAS IMGS
         List<Foto> fotos = fotoService.findFotoByPet(pet);

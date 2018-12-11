@@ -20,9 +20,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
                 // TODO: retirar linhas abaixo
 //                .antMatchers(HttpMethod.POST, "/uf", "/cidade", "/bairro").permitAll()
-//                .antMatchers( HttpMethod.POST, "/**" ).permitAll()
-//                .antMatchers( HttpMethod.GET, "/**" ).permitAll()
-//                .antMatchers( HttpMethod.DELETE, "/**" ).permitAll()
+                .antMatchers( HttpMethod.POST, "/**" ).permitAll()
+                .antMatchers( HttpMethod.GET, "/**" ).permitAll()
+                .antMatchers( HttpMethod.DELETE, "/**" ).permitAll()
                 .anyRequest()
                 .authenticated();
 
