@@ -55,6 +55,25 @@ public class FotoController {
 
     }
 
+    @ApiOperation(value = "Salva fotos")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Fotos salvas com sucesso")
+    })
+    @PostMapping("/fotos")
+    public List<Long> salvaFotos(@RequestParam("files") MultipartFile[] files) throws IOException {
+
+        List<Long> ids = new ArrayList<>();
+        for(MultipartFile file:files) {
+            byte[] bytes = Base64.getEncoder().encode(file.getBytes());
+            Foto foto = new Foto();
+            foto.setFoto(bytes);
+            fotoService.save(foto);
+            ids.add(foto.getId());
+        }
+        return ids;
+
+    }
+
     @ApiOperation(value = "Deleta uma foto")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Foto deletada com sucesso")
