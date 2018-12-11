@@ -60,7 +60,7 @@ public class FotoController {
             @ApiResponse(code = 201, message = "Fotos salvas com sucesso")
     })
     @PostMapping("/fotos")
-    public List<Long> salvaFotos(@RequestParam("files") MultipartFile[] files) throws IOException {
+    public List<Long> salvaFotos(@RequestParam("files") List<MultipartFile> files) throws IOException {
 
         List<Long> ids = new ArrayList<>();
         for(MultipartFile file:files) {
