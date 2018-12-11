@@ -35,21 +35,17 @@ public class WebConfigSecurityAdapter extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    @Transactional
-    public void authenticationManager(AuthenticationManagerBuilder builder, UsuarioRepository usuarioRepository)
-            throws Exception {
-        if (usuarioRepository.count() == 0) {
-            Usuario usuario = new Usuario();
-            usuario.setEmail("admin@admin.com");
-            usuario.setSenha(passwordEncoder().encode("adminadmin"));
-            usuario.setNome("admin");
-            usuario.setEnable(true);
+    protected void configure(AuthenticationManagerBuilder auth, UsuarioRepository repository) throws Exception {
+        Usuario usuario = new Usuario();
+        usuario.setSenha("adminadmin");
+        usuario.setEmail("admin@admin.com");
+        usuario.setNome("Administrador do sistema");
+        usuario.setEnable(true);
 
-            usuarioRepository.save(usuario);
-        }
+        if (repository.count() == 0)
+            repository.saveAndFlush(usuario);
 
-
-        builder.userDetailsService(email -> usuarioRepository.findByEmail(email).orElse(null)).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(email -> repository.findByEmail(email).orElse(null));
     }
 
     @Override
