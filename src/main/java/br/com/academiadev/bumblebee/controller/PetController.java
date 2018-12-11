@@ -171,17 +171,17 @@ public class PetController {
     })
     @GetMapping("/filtro")
     public PageImpl<PetsDTOResponse> buscarPorFiltro(
-            @RequestParam(defaultValue = "") String busca,
-            @RequestParam("categoria") Categoria categoria,
-            @RequestParam("especie") Especie especie,
-            @RequestParam("porte") Porte porte,
+            @RequestParam(value = "busca", defaultValue = "", required=false) String busca,
+            @RequestParam(value = "categoria", required=false) Categoria categoria,
+            @RequestParam(value = "especie", required=false) Especie especie,
+            @RequestParam(value = "porte", required=false) Porte porte,
             @RequestParam(defaultValue = "0") int paginaAtual,
             @RequestParam(defaultValue = "10") int tamanho,
             @RequestParam(defaultValue = "ASC") Sort.Direction direcao,
             @RequestParam(defaultValue = "datapostagem") String campoOrdenacao) {
         PageRequest paginacao = PageRequest.of(paginaAtual, tamanho, direcao, campoOrdenacao);
 
-        Page<Pet> listaPets = petService.findAllByFiltro(categoria.getDescricao(), especie.getDescricao(), porte.getDescricao(), busca, paginacao);
+            Page<Pet> listaPets = petService.findAllByFiltro(categoria, especie, porte, busca.toLowerCase(), paginacao);
         int totalDeElementos = (int) listaPets.getTotalElements();
         // UMA IMG
         FotoDTOResponse fotoPetDTO = new FotoDTOResponse();

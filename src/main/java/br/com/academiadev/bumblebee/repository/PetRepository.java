@@ -8,6 +8,7 @@ import br.com.academiadev.bumblebee.model.Usuario;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
@@ -22,15 +23,18 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     Page<Pet> findAllByCategoria(Categoria categoria, Pageable pageable);
 
-    @Query(value = "select p.id, excluido, created_at, updated_at, categoria, " +
-            "datapostagem, descricao, especie, nome, porte, sexo, localizacao_id, usuario_id " +
-            "from Pet p " +
-            "where p.nome like %:busca% or " +
-            "p.descricao like %:busca% or " +
-            "p.categoria = :categoria and " +
-            "p.especie = :especie and " +
-            "p.porte = :porte", nativeQuery = true)
-    Page<Pet> findAllByFiltro(String categoria, String especie, String porte, String busca, Pageable pageable);
+    @Query("select p from Pet p " +
+            "where ((:busca is null or lower(p.nome) like %:busca%)" +
+            "or (:busca is null or lower(p.descricao) like %:busca%))" +
+            "and (p.categoria = :categoria or :categoria is null)" +
+            "and (p.especie = :especie or :especie is null)" +
+            "and (p.porte = :porte or :porte is null)" +
+            "")
+    Page<Pet>  findAllByFiltro(@Param("categoria") Categoria categoria,
+                               @Param("especie") Especie especie,
+                               @Param("porte") Porte porte,
+                               @Param("busca") String busca,
+                               Pageable pageable);
 
     List<Pet> findAllByUsuario(Usuario usuario);
 

@@ -29,7 +29,7 @@ public class PetService extends ServiceAbstrataImpl<PetRepository, Pet, Long> {
         return getRepository().findAllByUsuario(usuario);
     }
 
-    public Page<Pet> findAllByFiltro(String categoria, String especie, String porte, String busca, Pageable pageable){
+    public Page<Pet> findAllByFiltro(Categoria categoria, Especie especie, Porte porte, String busca, Pageable pageable){
         return getRepository().findAllByFiltro(categoria, especie, porte, busca, pageable);
     }
 }

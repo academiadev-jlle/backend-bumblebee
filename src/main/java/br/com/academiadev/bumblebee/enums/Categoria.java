@@ -1,5 +1,10 @@
 package br.com.academiadev.bumblebee.enums;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@Getter
 public enum Categoria {
     ACHADOS("Achados"),
     DEVOLVIDOS("Devolvidos"),

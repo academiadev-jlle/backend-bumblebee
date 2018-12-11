@@ -54,21 +54,6 @@ public class PetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void buscarPorFiltro() throws Exception {
-
-        getPet();
-
-        mvc.perform(get("/pet/filtro")
-                .param("categoria", Categoria.ACHADOS.getDescricao().toUpperCase())
-                .param("especie", Especie.CACHORRO.getDescricao().toUpperCase())
-                .param("porte", Porte.PEQUENO.getDescricao().toUpperCase())
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.content[0].nome", is("Totó")))
-                .andExpect(jsonPath("$.numberOfElements", is(1)));
-
-    }
-
-    @Test
     public void buscarPorUsuario() throws Exception {
 
         PetDTOResponse pet = getPet();
