@@ -31,7 +31,7 @@ public interface PetMapper extends EntityMapper<Pet, PetDTO> {
             @Mapping(source = "usuario", target = "usuario"),
             @Mapping(source = "petDTO.nome", target = "nome"),
             @Mapping(source = "localizacao", target = "localizacao"),
-            @Mapping(source = "now", target = "dataPostagem"),
+            @Mapping(source = "now", target = "datapostagem"),
             @Mapping(target = "createdAt", ignore = true),
     })
     Pet toEntity(PetDTO petDTO, Usuario usuario, Localizacao localizacao, Date now);
@@ -48,12 +48,12 @@ public interface PetMapper extends EntityMapper<Pet, PetDTO> {
             @Mapping(source = "petDTOUpdate.especie", target = "especie"),
             @Mapping(source = "petDTOUpdate.sexo", target = "sexo"),
             @Mapping(source = "usuario", target = "usuario"),
-            @Mapping(source = "dataPostagem", target = "dataPostagem"),
+            @Mapping(source = "datapostagem", target = "datapostagem"),
             @Mapping(source = "localizacao", target = "localizacao"),
             @Mapping(source = "petDTOUpdate.localizacao.logradouro", target = "localizacao.logradouro"),
             @Mapping(source = "petDTOUpdate.localizacao.referencia", target = "localizacao.referencia")
     })
-    Pet toEntity(PetDTOUpdate petDTOUpdate, Long idPet, Usuario usuario, Localizacao localizacao, Date dataPostagem);
+    Pet toEntity(PetDTOUpdate petDTOUpdate, Long idPet, Usuario usuario, Localizacao localizacao, Date datapostagem);
 
     @Mappings({
             @Mapping(source = "foto", target = "foto")
@@ -71,7 +71,7 @@ public interface PetMapper extends EntityMapper<Pet, PetDTO> {
 //            @Mapping(target = "excluido", ignore = true),
 //            @Mapping(source = "usuario", target = "usuario"),
 //            @Mapping(source = "petDTOUpdate.nome", target = "nome"),
-//            @Mapping(source = "now", target = "dataPostagem"),
+//            @Mapping(source = "now", target = "datapostagem"),
 //            @Mapping(target = "createdAt", ignore = true),
 //    })
 //    Pet toEntityUpdate(PetDTOUpdate petDTOUpdate, Usuario usuario, Date now);
