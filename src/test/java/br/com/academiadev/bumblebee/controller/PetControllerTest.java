@@ -41,7 +41,7 @@ public class PetControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.nome", is("Totó")))
                 .andExpect(jsonPath("$.descricao", is("Peludo e brincalhão")))
-                .andExpect(jsonPath("$.usuario.nome", is("José da Silva")))
+                .andExpect(jsonPath("$.usuario.nome", is("Administrador do sistema")))
                 .andExpect(jsonPath("$.localizacao.cidade", is("Joinville")));
     }
 
@@ -83,7 +83,7 @@ public class PetControllerTest extends AbstractControllerTest {
 
         mvc.perform(get("/pet/usuario/{usuario}", jsonUsuario.get("id"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.content[0].usuario.nome", is("José da Silva")))
+                .andExpect(jsonPath("$.content[0].usuario.nome", is("Administrador do sistema")))
                 .andExpect(jsonPath("$.content[0].usuario.id", is(jsonUsuario.get("id"))));
 
     }
@@ -133,7 +133,7 @@ public class PetControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.nome", is("nome do pet editado")))
                 .andExpect(jsonPath("$.descricao", is("descricao do pet editado")))
-                .andExpect(jsonPath("$.usuario.nome", is("José da Silva")))
+                .andExpect(jsonPath("$.usuario.nome", is("Administrador do sistema")))
                 .andExpect(jsonPath("$.localizacao.referencia", is("Localizacao com referencia editada")));
     }
 

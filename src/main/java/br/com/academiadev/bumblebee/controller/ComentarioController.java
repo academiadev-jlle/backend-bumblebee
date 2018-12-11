@@ -16,6 +16,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,11 +45,15 @@ public class ComentarioController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Comentário criado com sucesso")
     })
-    @PostMapping("/{pet}/{usuario}")
+    @PostMapping("/pet/{pet}")
     public ComentarioDTOResponse criar(@RequestBody @Valid ComentarioDTO comentarioDTO,
-                                       @PathVariable(value = "usuario") Long idUsuario,
                                        @PathVariable(value = "pet") Long idPet) {
-        Usuario usuario = usuarioService.findById(idUsuario).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+
+        Usuario usuario = usuarioService.findById(usuarioLogado.getId()).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+
         Pet pet = petService.findById(idPet).orElseThrow(() -> new ObjectNotFoundException("Pet não encontrado"));
         Comentario comentario = comentarioMapper.toEntity(comentarioDTO, pet, usuario);
         comentarioService.save(comentario);

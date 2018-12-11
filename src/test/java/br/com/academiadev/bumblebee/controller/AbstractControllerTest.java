@@ -59,7 +59,7 @@ public class AbstractControllerTest {
         ComentarioDTO comentarioDTO = new ComentarioDTO();
         comentarioDTO.setDescricao("Comentário do pet");
 
-        String comentarioRetorno = mvc.perform(post("/comentario/{pet}/{usuario}", getPet().getId(), getUsuario().getId())
+        String comentarioRetorno = mvc.perform(post("/comentario/pet/{pet}", getPet().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(convertObjectToJsonBytes(comentarioDTO)))
@@ -156,7 +156,7 @@ public class AbstractControllerTest {
         petDTO.setSexo("macho");
         petDTO.setLocalizacao(localizacaoDTO);
 
-        String petRetorno = mvc.perform(post("/pet/usuario/{usuario}", getUsuario().getId())
+        String petRetorno = mvc.perform(post("/pet", getUsuario().getId())
                 .header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(convertObjectToJsonBytes(petDTO)))
