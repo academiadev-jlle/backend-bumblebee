@@ -1,7 +1,15 @@
 package br.com.academiadev.bumblebee.enums;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@Getter
 public enum Especie {
-    AVE("Ave"), CACHORRO("Cachorro"), GATO("Gato"), PEIXE("Peixe");
+    PASSARO("Pássaro"),
+    CACHORRO("Cachorro"),
+    GATO("Gato"),
+    OUTROS("Outros");
 
     private String descricao;
 

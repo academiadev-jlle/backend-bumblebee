@@ -1,7 +1,6 @@
 package br.com.academiadev.bumblebee.model;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +9,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
@@ -28,7 +29,9 @@ import javax.validation.constraints.NotNull;
 public class Foto extends EntidadeAuditavel<Long>{
 
     @NotNull
-    @ApiModelProperty(example = "foto/pet.jpg", name = "Arquivo")
-    private String arquivo;
+    private byte[] foto;
+
+    @ManyToOne(optional = true)
+    private Pet pet;
 
 }

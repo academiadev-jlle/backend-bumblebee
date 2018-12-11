@@ -1,24 +1,29 @@
 package br.com.academiadev.bumblebee.mapper;
 
-import br.com.academiadev.bumblebee.dto.UsuarioDTO;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTO;
+import br.com.academiadev.bumblebee.dto.Usuario.UsuarioDTOResponse;
 import br.com.academiadev.bumblebee.model.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper extends EntityMapper<Usuario, UsuarioDTO> {
 
-    @Mappings({
-
-            @Mapping(source = "createdAt", target = "created_at", dateFormat = "dd/MM/yyyy HH:mm")
-    })
-    @Override
     UsuarioDTO toDTO(Usuario entity);
 
+    UsuarioDTOResponse toDTOResponse(Usuario entity);
+
+    List<UsuarioDTOResponse> toDTOResponse(List<Usuario> entity);
+
     @Mappings({
-            @Mapping(target = "createdAt", source = "created_at", dateFormat = "dd/MM/yyyy HH:mm")
+            @Mapping(source = "senha", target = "senha"),
     })
+    Usuario toEntityUpdate(UsuarioDTOResponse usuarioDTOResponse, String senha);
+
     @Override
     Usuario toEntity(UsuarioDTO usuarioDTO);
+
 }

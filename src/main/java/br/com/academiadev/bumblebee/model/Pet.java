@@ -48,7 +48,7 @@ public class Pet extends EntidadeAuditavel<Long>{
     private String sexo;
 
     @NotNull
-    private Date dataPostagem;
+    private Date datapostagem;
 
     @ManyToOne
     private Usuario usuario;
