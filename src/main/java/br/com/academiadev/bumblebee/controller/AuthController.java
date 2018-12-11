@@ -1,18 +1,19 @@
 package br.com.academiadev.bumblebee.controller;
 
+import br.com.academiadev.bumblebee.dto.Usuario.LoginSocialDTO;
 import br.com.academiadev.bumblebee.exception.ObjectNotFoundException;
 import br.com.academiadev.bumblebee.mapper.UsuarioMapper;
 import br.com.academiadev.bumblebee.model.Usuario;
+import br.com.academiadev.bumblebee.service.FacebookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 
@@ -23,12 +24,16 @@ public class AuthController {
 
     private ConsumerTokenServices tokenServices;
     private UsuarioMapper usuarioMapper;
+    private FacebookService facebookService;
+
 
     @Autowired
     public AuthController(ConsumerTokenServices tokenServices,
-                          UsuarioMapper usuarioMapper) {
+                          UsuarioMapper usuarioMapper,
+                          FacebookService facebookService) {
         this.tokenServices = tokenServices;
         this.usuarioMapper = usuarioMapper;
+        this.facebookService = facebookService;
     }
 
     @GetMapping("info")
@@ -55,5 +60,15 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ObjectNotFoundException("Nenhum usuário está logado no sistema"));
+    }
+
+    @GetMapping("facebook/getUrl")
+    public String createFacebookAuthorization() {
+        return facebookService.criarUrlAutorizacaoFacebook();
+    }
+
+    @PostMapping("facebook/login")
+    public OAuth2AccessToken createFacebookAccessToken(@RequestBody LoginSocialDTO dto) {
+        return facebookService.login(dto).orElseThrow(() -> new ObjectNotFoundException("Nenhum usuário encontrado"));
     }
 }

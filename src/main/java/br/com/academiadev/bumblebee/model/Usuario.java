@@ -2,10 +2,7 @@ package br.com.academiadev.bumblebee.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +25,7 @@ import java.util.Collection;
 @EntityListeners(AuditingEntityListener.class)
 @ApiModel(description = "Usuario")
 @Entity
+@Builder
 @SQLDelete(sql =
         "UPDATE Usuario " +
                 "SET excluido = true " +
